@@ -93,6 +93,7 @@ func newApp(logger log.Logger, db dbm.DB, traceStore io.Writer) abci.Application
 		baseapp.SetMinGasPrices(viper.GetString(server.FlagMinGasPrices)),
 		baseapp.SetHaltHeight(viper.GetUint64(server.FlagHaltHeight)),
 		baseapp.SetHaltTime(viper.GetUint64(server.FlagHaltTime)),
+		baseapp.SetSnapshotInterval(viper.GetUint64(server.FlagSnapshotInterval)),
 		baseapp.SetInterBlockCache(cache),
 	)
 }
