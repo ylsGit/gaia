@@ -4,6 +4,12 @@ services:
   gaiadnode0:
     container_name: gaiadnode0
     image: "tendermint/gaiadnode"
+    command:
+      - start
+      - --snapshot-interval
+      - '3'
+      - --log_level
+      - 'main:info,state:info,statesync:info,*:error'
     ports:
       - "26656-26657:26656-26657"
     environment:
@@ -18,6 +24,10 @@ services:
   gaiadnode1:
     container_name: gaiadnode1
     image: "tendermint/gaiadnode"
+    command:
+      - start
+      - --log_level
+      - 'main:info,state:info,statesync:info,*:error'
     ports:
       - "26659-26660:26656-26657"
     environment:
@@ -32,6 +42,10 @@ services:
   gaiadnode2:
     container_name: gaiadnode2
     image: "tendermint/gaiadnode"
+    command:
+      - start
+      - --log_level
+      - 'main:info,state:info,statesync:info,*:error'
     environment:
       - ID=2
       - LOG=${LOG:-gaiad.log}
@@ -46,6 +60,10 @@ services:
   gaiadnode3:
     container_name: gaiadnode3
     image: "tendermint/gaiadnode"
+    command:
+      - start
+      - --log_level
+      - 'main:info,state:info,statesync:info,blockchain:info,*:error'
     environment:
       - ID=3
       - LOG=${LOG:-gaiad.log}

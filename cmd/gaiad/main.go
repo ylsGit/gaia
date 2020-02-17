@@ -94,6 +94,7 @@ func newApp(logger log.Logger, db dbm.DB, traceStore io.Writer) abci.Application
 		baseapp.SetHaltHeight(viper.GetUint64(server.FlagHaltHeight)),
 		baseapp.SetHaltTime(viper.GetUint64(server.FlagHaltTime)),
 		baseapp.SetSnapshotInterval(viper.GetUint64(server.FlagSnapshotInterval)),
+		baseapp.SetSnapshotDir("/gaiad/snapshots"),
 		baseapp.SetInterBlockCache(cache),
 	)
 }
