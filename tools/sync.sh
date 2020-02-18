@@ -5,7 +5,9 @@ set -euo pipefail
 
 read -r HEIGHT HASH <<<$(curl -sSf 'localhost:26657/commit?height=1' | jq -r '"\(.result.signed_header.header.height) \(.result.signed_header.commit.block_id.hash)"')
 
-docker stop gaiadnode3
+if docker inspect gaiadnode3 >/dev/null; then
+  docker stop gaiadnode3
+fi
 #rm -rf build/node3/gaiad/data/*
 #echo '{"height":"0","round":"0","step":0}' >build/node3/gaiad/data/priv_validator_state.json
 gsed -ire 's/^enabled = .*/enabled = true/g' build/node3/gaiad/config/config.toml
