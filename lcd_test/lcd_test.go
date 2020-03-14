@@ -1055,7 +1055,7 @@ func TestDistributionFlow(t *testing.T) {
 	require.Equal(t, operAddr.String(), withdrawAddr)
 
 	// Withdraw delegator's rewards
-	resultTx = doWithdrawDelegatorAllRewards(t, port, name1, addr, fees)
+	resultTx = doWithdrawDelegatorAllRewards(t, port, name1, addr, fees, kb)
 	require.Equal(t, uint32(0), resultTx.Code)
 }
 

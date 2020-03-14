@@ -1105,6 +1105,7 @@ func doUnjail(
 // POST /distribution/delegators/{delgatorAddr}/rewards Withdraw delegator rewards
 func doWithdrawDelegatorAllRewards(
 	t *testing.T, port, name string, delegatorAddr sdk.AccAddress, fees sdk.Coins,
+	kb keys.Keybase,
 ) sdk.TxResponse {
 	// get the account to get the sequence
 	acc := getAccount(t, port, delegatorAddr)
@@ -1123,7 +1124,7 @@ func doWithdrawDelegatorAllRewards(
 	resp, body := Request(t, port, "POST", fmt.Sprintf("/distribution/delegators/%s/rewards", delegatorAddr), req)
 	require.Equal(t, http.StatusOK, resp.StatusCode, body)
 
-	resp, body = signAndBroadcastGenTx(t, port, name, body, acc, flags.DefaultGasAdjustment, false, nil)
+	resp, body = signAndBroadcastGenTx(t, port, name, body, acc, flags.DefaultGasAdjustment, false, kb)
 	require.Equal(t, http.StatusOK, resp.StatusCode, body)
 
 	var txResp sdk.TxResponse
