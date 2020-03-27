@@ -14,7 +14,7 @@ This repository hosts `Gaia`, the first implementation of the Cosmos Hub based o
 
 ## Cosmos Hub Mainnet
 
-To run a full-node for the mainnet of the Cosmos Hub, first [install `gaiad`](./docs/gaia-tutorials/installation.md), then follow [the guide](./docs/gaia-tutorials/join-mainnet.md).
+To run a full-node for the mainnet of the Cosmos Hub, first [install `gaiad`](./docs/running-a-node/installation.md), then follow [the guide](./docs/running-a-node/join-mainnet.md).
 
 For status updates and genesis file, see the [launch repo](https://github.com/cosmos/launch).
 
