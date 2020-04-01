@@ -28,6 +28,16 @@ The [README.md](./README.md) is also the landing page for the documentation
 on the website. During the Jenkins build, the current commit is added to the bottom
 of the README.
 
+## Terminology
+
+Here are frequentely used terms that should be used as outlined below for consistency:
+
+- **The Cosmos Hub** for the name of the network.
+- **ATOMs** to designate ATOMs as countable unit.
+- **The ATOM token** to designate the token itself. 
+- **Gaia** for the software. 
+- ***gaiacli*** for the command-line interface.
+
 ## Links
 
 **NOTE:** Strongly consider the existing links - both within this directory
