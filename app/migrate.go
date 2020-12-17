@@ -22,6 +22,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/genutil/types"
 	ibcxfertypes "github.com/cosmos/cosmos-sdk/x/ibc/applications/transfer/types"
 	host "github.com/cosmos/cosmos-sdk/x/ibc/core/24-host"
+	"github.com/cosmos/cosmos-sdk/x/ibc/core/exported"
 	ibccoretypes "github.com/cosmos/cosmos-sdk/x/ibc/core/types"
 	staking "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/pkg/errors"
@@ -30,10 +31,12 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 )
 
-const flagGenesisTime = "genesis-time"
-const flagInitialHeight = "initial-height"
-const flagReplacementKeys = "replacement-cons-keys"
-const flagNoProp29 = "no-prop-29"
+const (
+	flagGenesisTime     = "genesis-time"
+	flagInitialHeight   = "initial-height"
+	flagReplacementKeys = "replacement-cons-keys"
+	flagNoProp29        = "no-prop-29"
+)
 
 // MigrateGenesisCmd returns a command to execute genesis state migration.
 func MigrateGenesisCmd() *cobra.Command {
@@ -139,7 +142,8 @@ $ %s migrate /path/to/genesis.json --chain-id=cosmoshub-4 --genesis-time=2019-04
 			ibcTransferGenesis.Params.ReceiveEnabled = false
 			ibcTransferGenesis.Params.SendEnabled = false
 
-			stakingGenesis.Params.HistoricalEntries = 1000
+			ibcCoreGenesis.ClientGenesis.Params.AllowedClients = []string{exported.Tendermint}
+			stakingGenesis.Params.HistoricalEntries = 10000
 
 			newGenState[ibcxfertypes.ModuleName] = clientCtx.JSONMarshaler.MustMarshalJSON(ibcTransferGenesis)
 			newGenState[host.ModuleName] = clientCtx.JSONMarshaler.MustMarshalJSON(ibcCoreGenesis)
@@ -226,6 +230,7 @@ func migrateTendermintGenesis(jsonBlob []byte) ([]byte, error) {
 	delete(evidenceParams, "max_age")
 
 	evidenceParams["max_age_duration"] = "172800000000000"
+	evidenceParams["max_bytes"] = "50000"
 
 	jsonBlob, err = json.Marshal(jsonObj)
 
