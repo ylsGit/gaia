@@ -6,7 +6,7 @@ require (
 	github.com/btcsuite/btcd v0.21.0-beta
 	github.com/btcsuite/btcutil v1.0.2
 	github.com/cosmos/cosmos-sdk v0.42.0-alpha1.0.20210309095152-24ed401c81e8
-	github.com/cosmos/ibc-go v0.0.0-20210305132635-fa091bcda3b1
+	github.com/cosmos/ibc-go v0.0.0-20210312172444-333c1f338b2a
 	github.com/ethereum/go-ethereum v1.9.25
 	github.com/gorilla/mux v1.8.0
 	github.com/pkg/errors v0.9.1
