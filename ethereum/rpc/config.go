@@ -3,22 +3,21 @@ package rpc
 import (
 	"bufio"
 	"fmt"
-	sdkcrypto "github.com/cosmos/cosmos-sdk/crypto"
 	"os"
 	"strings"
-
-	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/spf13/viper"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/input"
 	"github.com/cosmos/cosmos-sdk/client/lcd"
-	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	cmserver "github.com/cosmos/cosmos-sdk/server"
-	"github.com/ethereum/go-ethereum/rpc"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
+	sdkcrypto "github.com/cosmos/cosmos-sdk/crypto"
 	"github.com/cosmos/cosmos-sdk/crypto/hd"
+	"github.com/cosmos/cosmos-sdk/crypto/keyring"
+	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+	"github.com/cosmos/cosmos-sdk/x/evm"
 	"github.com/cosmos/gaia/v4/ethereum/rpc/websockets"
+	"github.com/ethereum/go-ethereum/rpc"
+	"github.com/spf13/viper"
 )
 
 const (
@@ -35,7 +34,7 @@ const (
 // Rpc calls are enabled based on their associated module (eg. "eth").
 func RegisterRoutes(rs *lcd.RestServer) {
 	server := rpc.NewServer()
-	accountName := viper.GetString(cmserver.FlagUlockKey)
+	accountName := viper.GetString(evm.FlagUlockKey)
 	accountNames := strings.Split(accountName, ",")
 
 	var privkeys []ethsecp256k1.PrivKey
@@ -86,7 +85,7 @@ func unlockKeyFromNameAndPassphrase(accountNames []string, passphrase string) ([
 	kr, err := keyring.New(
 		sdk.KeyringServiceName(),
 		viper.GetString(flags.FlagKeyringBackend),
-		viper.GetString(cmserver.FlagUlockKeyHome),
+		viper.GetString(evm.FlagUlockKeyHome),
 		os.Stdin,
 		hd.EthSecp256k1Option(),
 	)

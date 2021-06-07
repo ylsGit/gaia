@@ -230,8 +230,9 @@ func (api *PubSubAPI) subscribeLogs(conn *websocket.Conn, extra interface{}) (rp
 						return
 					}
 
-					logs := rpcfilters.FilterLogs(resultData.TxLogs.EthLogs(), crit.FromBlock, crit.ToBlock, crit.Addresses, crit.Topics)
+					logs := rpcfilters.FilterLogs(evmtypes.LogsToEthereum(resultData.Logs), crit.FromBlock, crit.ToBlock, crit.Addresses, crit.Topics)
 					if len(logs) == 0 {
+						api.logger.Debug("no matched logs", "ID", sub.ID(), "txhash", resultData.TxHash)
 						return
 					}
 

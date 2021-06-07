@@ -4,15 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/go-kit/kit/metrics/prometheus"
 	"io/ioutil"
 	"math/big"
 	"net/http"
-	"strings"
 	"sync"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/server"
+	"github.com/cosmos/cosmos-sdk/x/evm"
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"
@@ -33,24 +31,24 @@ type Server struct {
 
 // NewServer creates a new websocket server instance.
 func NewServer(clientCtx client.Context, log log.Logger, wsAddr string) *Server {
-	restServerAddr := viper.GetString(server.FlagListenAddr)
-	parts := strings.SplitN(restServerAddr, "://", 2)
-	if len(parts) != 2 {
-		panic(fmt.Errorf("invalid listening address %s (use fully formed addresses, including the tcp:// or unix:// prefix)", restServerAddr))
-	}
-	url := parts[1]
-	urlParts := strings.SplitN(url, ":", 2)
-	if len(urlParts) != 2 {
-		panic(fmt.Errorf("invalid listening address %s (use ip:port as an url)", url))
-	}
-	port := urlParts[1]
+	//restServerAddr := viper.GetString(server.FlagListenAddr)
+	//parts := strings.SplitN(restServerAddr, "://", 2)
+	//if len(parts) != 2 {
+	//	panic(fmt.Errorf("invalid listening address %s (use fully formed addresses, including the tcp:// or unix:// prefix)", restServerAddr))
+	//}
+	//url := parts[1]
+	//urlParts := strings.SplitN(url, ":", 2)
+	//if len(urlParts) != 2 {
+	//	panic(fmt.Errorf("invalid listening address %s (use ip:port as an url)", url))
+	//}
+	//port := urlParts[1]
 
 	return &Server{
-		rpcAddr:      "http://localhost:" + port,
+		//rpcAddr:      "http://localhost:" + port,
 		wsAddr:       wsAddr,
 		api:          NewAPI(clientCtx, log),
 		logger:       log.With("module", "websocket-server"),
-		connPool:     make(chan struct{}, viper.GetInt(server.FlagWsMaxConnections)),
+		connPool:     make(chan struct{}, viper.GetInt(evm.FlagWsMaxConnections)),
 		connPoolLock: new(sync.Mutex),
 	}
 }

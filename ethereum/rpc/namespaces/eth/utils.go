@@ -210,7 +210,7 @@ func genericStringMap(s []string) map[string]string {
 	return ret
 }
 
-func CheckError(txRes sdk.TxResponse) (common.Hash, error) {
+func CheckError(txRes *sdk.TxResponse) (common.Hash, error) {
 	switch txRes.Code {
 	case sdkerror.ErrTxInMempoolCache.ABCICode():
 		return common.Hash{}, sdkerror.ErrTxInMempoolCache

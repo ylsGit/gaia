@@ -22,15 +22,15 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
+	"github.com/cosmos/cosmos-sdk/x/evm"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
+	gaia "github.com/cosmos/gaia/v4/app"
+	"github.com/cosmos/gaia/v4/app/params"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	tmcli "github.com/tendermint/tendermint/libs/cli"
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
-
-	gaia "github.com/cosmos/gaia/v4/app"
-	"github.com/cosmos/gaia/v4/app/params"
 )
 
 // NewRootCmd creates a new root command for simd. It is called once in the
@@ -91,6 +91,7 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 }
 func addModuleInitFlags(startCmd *cobra.Command) {
 	crisis.AddModuleInitFlags(startCmd)
+	evm.AddModuleInitFlags(startCmd)
 }
 
 func queryCommand() *cobra.Command {

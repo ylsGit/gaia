@@ -3,19 +3,18 @@ package backend
 import (
 	"context"
 	"fmt"
-	"golang.org/x/time/rate"
 
-	"github.com/tendermint/tendermint/libs/log"
-	rpctypes "github.com/cosmos/gaia/v4/ethereum/rpc/types"
-	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
 	"github.com/cosmos/cosmos-sdk/client"
+	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
+	rpctypes "github.com/cosmos/gaia/v4/ethereum/rpc/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/bitutil"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/core/bloombits"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
-	tmtypes "github.com/tendermint/tendermint/types"
+	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
+	"golang.org/x/time/rate"
 )
 
 // Backend implements the functionality needed to filter changes.
@@ -51,7 +50,7 @@ var _ Backend = (*EthermintBackend)(nil)
 type EthermintBackend struct {
 	ctx               context.Context
 	clientCtx         client.Context
-	queryClient evmtypes.QueryClient // gRPC query client
+	queryClient       evmtypes.QueryClient // gRPC query client
 	logger            log.Logger
 	gasLimit          int64
 	bloomRequests     chan chan *bloombits.Retrieval
@@ -101,32 +100,22 @@ func (b *EthermintBackend) GetBlockByNumber(blockNum rpctypes.BlockNumber, fullT
 		height = int64(num)
 	}
 
-	resBlock, err := b.clientCtx.Client.Block(b.ctx,&height)
+	resBlock, err := b.clientCtx.Client.Block(b.ctx, &height)
 	if err != nil {
 		return nil, nil
 	}
 
-	return rpctypes.EthBlockFromTendermint(b.clientCtx, resBlock.Block, fullTx)
+	return rpctypes.EthBlockFromTendermint(b.clientCtx, b.queryClient, resBlock.Block, fullTx)
 }
 
 // GetBlockByHash returns the block identified by hash.
 func (b *EthermintBackend) GetBlockByHash(hash common.Hash, fullTx bool) (interface{}, error) {
-	res, _, err := b.clientCtx.Query(fmt.Sprintf("custom/%s/%s/%s", evmtypes.ModuleName, evmtypes.QueryHashToHeight, hash.Hex()))
-	if err != nil {
-		return nil, err
-	}
-
-	var out evmtypes.QueryResBlockNumber
-	if err := b.clientCtx.Codec.UnmarshalJSON(res, &out); err != nil {
-		return nil, err
-	}
-
-	resBlock, err := b.clientCtx.Client.Block(b.ctx,&out.Number)
+	resBlock, err := b.clientCtx.Client.BlockByHash(b.ctx, hash.Bytes())
 	if err != nil {
 		return nil, nil
 	}
 
-	return rpctypes.EthBlockFromTendermint(b.clientCtx, resBlock.Block, fullTx)
+	return rpctypes.EthBlockFromTendermint(b.clientCtx, b.queryClient, resBlock.Block, fullTx)
 }
 
 // HeaderByNumber returns the block header identified by height.
@@ -142,51 +131,37 @@ func (b *EthermintBackend) HeaderByNumber(blockNum rpctypes.BlockNumber) (*ethty
 		height = int64(num)
 	}
 
-	resBlock, err := b.clientCtx.Client.Block(b.ctx,&height)
+	resBlock, err := b.clientCtx.Client.Block(b.ctx, &height)
 	if err != nil {
 		return nil, err
 	}
 
-	res, _, err := b.clientCtx.Query(fmt.Sprintf("custom/%s/%s/%d", evmtypes.ModuleName, evmtypes.QueryBloom, resBlock.Block.Height))
+	req := &evmtypes.QueryBlockBloomRequest{}
+	bloomRes, err := b.queryClient.BlockBloom(rpctypes.ContextWithHeight(resBlock.Block.Height), req)
 	if err != nil {
 		return nil, err
 	}
-
-	var bloomRes evmtypes.QueryBloomFilter
-	b.clientCtx.Codec.MustUnmarshalJSON(res, &bloomRes)
 
 	ethHeader := rpctypes.EthHeaderFromTendermint(resBlock.Block.Header)
-	ethHeader.Bloom = bloomRes.Bloom
+	ethHeader.Bloom = ethtypes.BytesToBloom(bloomRes.Bloom)
 	return ethHeader, nil
 }
 
 // HeaderByHash returns the block header identified by hash.
 func (b *EthermintBackend) HeaderByHash(blockHash common.Hash) (*ethtypes.Header, error) {
-	res, _, err := b.clientCtx.Query(fmt.Sprintf("custom/%s/%s/%s", evmtypes.ModuleName, evmtypes.QueryHashToHeight, blockHash.Hex()))
+	resBlock, err := b.clientCtx.Client.BlockByHash(b.ctx, blockHash.Bytes())
 	if err != nil {
 		return nil, err
 	}
 
-	var out evmtypes.QueryResBlockNumber
-	if err := b.clientCtx.Codec.UnmarshalJSON(res, &out); err != nil {
-		return nil, err
-	}
-
-	resBlock, err := b.clientCtx.Client.Block(b.ctx,&out.Number)
+	req := &evmtypes.QueryBlockBloomRequest{}
+	bloomRes, err := b.queryClient.BlockBloom(rpctypes.ContextWithHeight(resBlock.Block.Height), req)
 	if err != nil {
 		return nil, err
 	}
-
-	res, _, err = b.clientCtx.Query(fmt.Sprintf("custom/%s/%s/%d", evmtypes.ModuleName, evmtypes.QueryBloom, resBlock.Block.Height))
-	if err != nil {
-		return nil, err
-	}
-
-	var bloomRes evmtypes.QueryBloomFilter
-	b.clientCtx.Codec.MustUnmarshalJSON(res, &bloomRes)
 
 	ethHeader := rpctypes.EthHeaderFromTendermint(resBlock.Block.Header)
-	ethHeader.Bloom = bloomRes.Bloom
+	ethHeader.Bloom = ethtypes.BytesToBloom(bloomRes.Bloom)
 	return ethHeader, nil
 }
 
@@ -194,23 +169,24 @@ func (b *EthermintBackend) HeaderByHash(blockHash common.Hash) (*ethtypes.Header
 // It returns an error if there's an encoding error.
 // If no logs are found for the tx hash, the error is nil.
 func (b *EthermintBackend) GetTransactionLogs(txHash common.Hash) ([]*ethtypes.Log, error) {
-	txRes, err := b.clientCtx.Client.Tx(txHash.Bytes(), !b.clientCtx.TrustNode)
+	txRes, err := b.clientCtx.Client.Tx(b.ctx, txHash.Bytes(), false)
 	if err != nil {
 		return nil, err
 	}
 
-	execRes, err := evmtypes.DecodeResultData(txRes.TxResult.Data)
+	execRes, err := evmtypes.DecodeTxResponse(txRes.TxResult.Data)
 	if err != nil {
 		return nil, err
 	}
 
-	return execRes.Logs, nil
+	return evmtypes.LogsToEthereum(execRes.Logs), nil
 }
 
 // PendingTransactions returns the transactions that are in the transaction pool
 // and have a from address that is one of the accounts this node manages.
 func (b *EthermintBackend) PendingTransactions() ([]*rpctypes.Transaction, error) {
-	pendingTxs, err := b.clientCtx.Client.UnconfirmedTxs(-1)
+	limit := -1
+	pendingTxs, err := b.clientCtx.Client.UnconfirmedTxs(b.ctx, &limit)
 	if err != nil {
 		return nil, err
 	}
@@ -236,7 +212,8 @@ func (b *EthermintBackend) PendingTransactions() ([]*rpctypes.Transaction, error
 }
 
 func (b *EthermintBackend) PendingTransactionCnt() (int, error) {
-	result, err := b.clientCtx.Client.UnconfirmedTxs(b.ctx,-1)
+	limit := -1
+	result, err := b.clientCtx.Client.UnconfirmedTxs(b.ctx, &limit)
 	if err != nil {
 		return 0, err
 	}
@@ -244,71 +221,64 @@ func (b *EthermintBackend) PendingTransactionCnt() (int, error) {
 }
 
 func (b *EthermintBackend) UserPendingTransactionsCnt(address string) (int, error) {
-	result, err := b.clientCtx.Client.UserNumUnconfirmedTxs(address)
-	if err != nil {
-		return 0, err
-	}
-	return result.Count, nil
+	return 0, nil
+	//result, err := b.clientCtx.Client.UserNumUnconfirmedTxs(address)
+	//if err != nil {
+	//	return 0, err
+	//}
+	//return result.Count, nil
 }
 
 func (b *EthermintBackend) UserPendingTransactions(address string, limit int) ([]*rpctypes.Transaction, error) {
-	result, err := b.clientCtx.Client.UserUnconfirmedTxs(address, limit)
-	if err != nil {
-		return nil, err
-	}
-
-	transactions := make([]*rpctypes.Transaction, len(result.Txs))
-	for _, tx := range result.Txs {
-		ethTx, err := rpctypes.RawTxToEthTx(b.clientCtx, tx)
-		if err != nil {
-			// ignore non Ethermint EVM transactions
-			continue
-		}
-
-		// TODO: check signer and reference against accounts the node manages
-		rpcTx, err := rpctypes.NewTransaction(ethTx, common.BytesToHash(tx.Hash()), common.Hash{}, 0, 0)
-		if err != nil {
-			return nil, err
-		}
-
-		transactions = append(transactions, rpcTx)
-	}
-
-	return transactions, nil
+	return nil, nil
+	//result, err := b.clientCtx.Client.UserUnconfirmedTxs(address, limit)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//transactions := make([]*rpctypes.Transaction, len(result.Txs))
+	//for _, tx := range result.Txs {
+	//	ethTx, err := rpctypes.RawTxToEthTx(b.clientCtx, tx)
+	//	if err != nil {
+	//		// ignore non Ethermint EVM transactions
+	//		continue
+	//	}
+	//
+	//	// TODO: check signer and reference against accounts the node manages
+	//	rpcTx, err := rpctypes.NewTransaction(ethTx, common.BytesToHash(tx.Hash()), common.Hash{}, 0, 0)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//
+	//	transactions = append(transactions, rpcTx)
+	//}
+	//
+	//return transactions, nil
 }
 
 // PendingTransactions returns the transaction that is in the transaction pool
 // and have a from address that is one of the accounts this node manages.
 func (b *EthermintBackend) PendingTransactionsByHash(target common.Hash) (*rpctypes.Transaction, error) {
-	pendingTx, err := b.clientCtx.Client.GetUnconfirmedTxByHash(target)
-	if err != nil {
-		return nil, err
-	}
-	ethTx, err := rpctypes.RawTxToEthTx(b.clientCtx, pendingTx)
-	if err != nil {
-		// ignore non Ethermint EVM transactions
-		return nil, err
-	}
-	rpcTx, err := rpctypes.NewTransaction(ethTx, common.BytesToHash(pendingTx.Hash()), common.Hash{}, 0, 0)
-	if err != nil {
-		return nil, err
-	}
-	return rpcTx, nil
+	return nil, nil
+	//pendingTx, err := b.clientCtx.Client.GetUnconfirmedTxByHash(target)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//ethTx, err := rpctypes.RawTxToEthTx(b.clientCtx, pendingTx)
+	//if err != nil {
+	//	// ignore non Ethermint EVM transactions
+	//	return nil, err
+	//}
+	//rpcTx, err := rpctypes.NewTransaction(ethTx, common.BytesToHash(pendingTx.Hash()), common.Hash{}, 0, 0)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//return rpcTx, nil
 }
 
 // GetLogs returns all the logs from all the ethereum transactions in a block.
 func (b *EthermintBackend) GetLogs(blockHash common.Hash) ([][]*ethtypes.Log, error) {
-	res, _, err := b.clientCtx.Query(fmt.Sprintf("custom/%s/%s/%s", evmtypes.ModuleName, evmtypes.QueryHashToHeight, blockHash.Hex()))
-	if err != nil {
-		return nil, err
-	}
-
-	var out evmtypes.QueryResBlockNumber
-	if err := b.clientCtx.Codec.UnmarshalJSON(res, &out); err != nil {
-		return nil, err
-	}
-
-	block, err := b.clientCtx.Client.Block(b.ctx,&out.Number)
+	block, err := b.clientCtx.Client.BlockByHash(b.ctx, blockHash.Bytes())
 	if err != nil {
 		return nil, err
 	}
@@ -316,16 +286,16 @@ func (b *EthermintBackend) GetLogs(blockHash common.Hash) ([][]*ethtypes.Log, er
 	var blockLogs = [][]*ethtypes.Log{}
 	for _, tx := range block.Block.Txs {
 		// NOTE: we query the state in case the tx result logs are not persisted after an upgrade.
-		txRes, err := b.clientCtx.Client.Tx(tx.Hash(), !b.clientCtx.TrustNode)
+		txRes, err := b.clientCtx.Client.Tx(b.ctx, tx.Hash(), false)
 		if err != nil {
 			continue
 		}
-		execRes, err := evmtypes.DecodeResultData(txRes.TxResult.Data)
+		execRes, err := evmtypes.DecodeTxResponse(txRes.TxResult.Data)
 		if err != nil {
 			continue
 		}
 
-		blockLogs = append(blockLogs, execRes.Logs)
+		blockLogs = append(blockLogs, evmtypes.LogsToEthereum(execRes.Logs))
 	}
 
 	return blockLogs, nil
@@ -341,7 +311,7 @@ func (b *EthermintBackend) BloomStatus() (uint64, uint64) {
 // LatestBlockNumber gets the latest block height in int64 format.
 func (b *EthermintBackend) LatestBlockNumber() (int64, error) {
 	// NOTE: using 0 as min and max height returns the blockchain info up to the latest block.
-	info, err := b.clientCtx.Client.BlockchainInfo(b.ctx,0, 0)
+	info, err := b.clientCtx.Client.BlockchainInfo(b.ctx, 0, 0)
 	if err != nil {
 		return 0, err
 	}
@@ -369,7 +339,7 @@ func (b *EthermintBackend) StartBloomHandlers(sectionSize uint64, db dbm.DB) {
 					task := <-request
 					task.Bitsets = make([][]byte, len(task.Sections))
 					for i, section := range task.Sections {
-						height := int64((section+1)*sectionSize-1) + tmtypes.GetStartBlockHeight()
+						height := int64((section+1)*sectionSize - 1)
 						hash, err := b.GetBlockHashByHeight(rpctypes.BlockNumber(height))
 						if err != nil {
 							task.Error = err

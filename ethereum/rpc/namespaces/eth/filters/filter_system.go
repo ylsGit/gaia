@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/server"
 	"github.com/spf13/viper"
 	tmquery "github.com/tendermint/tendermint/libs/pubsub/query"
 	rpcclient "github.com/tendermint/tendermint/rpc/client"
@@ -18,9 +17,9 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-
-	rpctypes "github.com/cosmos/gaia/v4/ethereum/rpc/types"
+	"github.com/cosmos/cosmos-sdk/x/evm"
 	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
+	rpctypes "github.com/cosmos/gaia/v4/ethereum/rpc/types"
 )
 
 var (
@@ -80,7 +79,7 @@ func NewEventSystem(client rpcclient.Client) *EventSystem {
 	es := &EventSystem{
 		ctx:           context.Background(),
 		client:        client,
-		channelLength: viper.GetInt(server.FlagWsSubChannelLength),
+		channelLength: viper.GetInt(evm.FlagWsSubChannelLength),
 		lightMode:     false,
 		index:         index,
 		install:       make(chan *Subscription),
@@ -265,11 +264,11 @@ func (es *EventSystem) handleLogs(ev coretypes.ResultEvent) {
 		return
 	}
 
-	if len(resultData.TxLogs.Logs) == 0 {
+	if len(resultData.Logs) == 0 {
 		return
 	}
 	for _, f := range es.index[filters.LogsSubscription] {
-		matchedLogs := FilterLogs(resultData.TxLogs.EthLogs(), f.logsCrit.FromBlock, f.logsCrit.ToBlock, f.logsCrit.Addresses, f.logsCrit.Topics)
+		matchedLogs := FilterLogs(evmtypes.LogsToEthereum(resultData.Logs), f.logsCrit.FromBlock, f.logsCrit.ToBlock, f.logsCrit.Addresses, f.logsCrit.Topics)
 		if len(matchedLogs) > 0 {
 			f.logs <- matchedLogs
 		}
