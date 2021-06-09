@@ -30,8 +30,8 @@ const (
 	apiVersion = "1.0"
 )
 
-// GetAPIs returns the list of all APIs from the Ethereum namespaces
-func GetAPIs(clientCtx client.Context, log log.Logger, keys ...ethsecp256k1.PrivKey) []rpc.API {
+// GetRPCAPIs returns the list of all APIs from the Ethereum namespaces
+func GetRPCAPIs(clientCtx client.Context, log log.Logger, keys ...ethsecp256k1.PrivKey) []rpc.API {
 	nonceLock := new(rpctypes.AddrLocker)
 	rateLimiters := getRateLimiter()
 	ethBackend := backend.New(clientCtx, log, rateLimiters)

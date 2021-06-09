@@ -10,7 +10,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
 	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
 	"github.com/cosmos/gaia/v4/ethereum/rpc/backend"
@@ -102,7 +101,7 @@ func (api *PublicEthereumAPI) GetKeyringInfo() error {
 		viper.GetString(flags.FlagKeyringBackend),
 		viper.GetString(evm.FlagUlockKeyHome),
 		api.clientCtx.Input,
-		hd.EthSecp256k1Option(),
+		keyring.EthSecp256k1Option(),
 	)
 	if err != nil {
 		return err
@@ -590,27 +589,37 @@ func (api *PublicEthereumAPI) doCall(
 	msg := evmtypes.NewMsgEthermint(nonce, &toAddr, sdk.NewIntFromBigInt(value), gas,
 		sdk.NewIntFromBigInt(gasPrice), data, sdk.AccAddress(addr.Bytes()))
 	msgs = append(msgs, msg)
+	fees := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewIntFromBigInt(msg.Fee())))
 
 	// convert the pending transactions into ethermint msgs
-	if blockNum == rpctypes.PendingBlockNumber {
-		pendingMsgs, err := api.pendingMsgs()
-		if err != nil {
-			return nil, err
-		}
-		msgs = append(msgs, pendingMsgs...)
-	}
+	//if blockNum == rpctypes.PendingBlockNumber {
+	//	pendingMsgs, err := api.pendingMsgs()
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	msgs = append(msgs, pendingMsgs...)
+	//}
 
 	// Generate tx to be used to simulate (signature isn't needed)
-	var stdSig authtypes.StdSignature
-	stdSigs := []authtypes.StdSignature{stdSig}
+	//var stdSig authtypes.StdSignature
+	//stdSigs := []authtypes.StdSignature{stdSig}
+	//
+	//tx := authtypes.NewStdTx(msgs, authtypes.StdFee{}, stdSigs, "")
+	//if err := tx.ValidateBasic(); err != nil {
+	//	return nil, err
+	//}
 
-	tx := authtypes.NewStdTx(msgs, authtypes.StdFee{}, stdSigs, "")
-	if err := tx.ValidateBasic(); err != nil {
-		return nil, err
+	// Create a TxBuilder
+	txBuilder := api.clientCtx.TxConfig.NewTxBuilder()
+	if err := txBuilder.SetMsgs(msgs...); err != nil {
+		panic("builder.SetMsgs failed")
 	}
 
+	txBuilder.SetFeeAmount(fees)
+	txBuilder.SetGasLimit(gas)
+
 	txEncoder := api.clientCtx.TxConfig.TxEncoder()
-	txBytes, err := txEncoder(tx)
+	txBytes, err := txEncoder(txBuilder.GetTx())
 	if err != nil {
 		return nil, err
 	}

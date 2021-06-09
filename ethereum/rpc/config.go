@@ -1,29 +1,19 @@
 package rpc
 
 import (
-	"bufio"
 	"fmt"
 	"os"
-	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/cosmos/cosmos-sdk/client/input"
-	"github.com/cosmos/cosmos-sdk/client/lcd"
 	sdkcrypto "github.com/cosmos/cosmos-sdk/crypto"
-	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/evm"
-	"github.com/cosmos/gaia/v4/ethereum/rpc/websockets"
-	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/spf13/viper"
 )
 
 const (
-	flagUnlockKey = "unlock-key"
-	flagWebsocket = "wsport"
-
 	FlagPersonalAPI    = "personal-api"
 	FlagRateLimitApi   = "rpc.rate-limit-api"
 	FlagRateLimitCount = "rpc.rate-limit-count"
@@ -32,62 +22,62 @@ const (
 
 // RegisterRoutes creates a new server and registers the `/rpc` endpoint.
 // Rpc calls are enabled based on their associated module (eg. "eth").
-func RegisterRoutes(rs *lcd.RestServer) {
-	server := rpc.NewServer()
-	accountName := viper.GetString(evm.FlagUlockKey)
-	accountNames := strings.Split(accountName, ",")
+//func RegisterRoutes(rs *lcd.RestServer) {
+//	server := rpc.NewServer()
+//	accountName := viper.GetString(evm.FlagUlockKey)
+//	accountNames := strings.Split(accountName, ",")
+//
+//	var privkeys []ethsecp256k1.PrivKey
+//	if len(accountName) > 0 {
+//		var err error
+//		inBuf := bufio.NewReader(os.Stdin)
+//
+//		keyringBackend := viper.GetString(flags.FlagKeyringBackend)
+//		passphrase := ""
+//		switch keyringBackend {
+//		case keyring.BackendOS:
+//			break
+//		case keyring.BackendFile:
+//			passphrase, err = input.GetPassword(
+//				"Enter password to unlock key for RPC API: ",
+//				inBuf)
+//			if err != nil {
+//				panic(err)
+//			}
+//		}
+//
+//		privkeys, err = unlockKeyFromNameAndPassphrase(accountNames, passphrase)
+//		if err != nil {
+//			panic(err)
+//		}
+//	}
+//
+//	apis := GetAPIs(rs.CliCtx, rs.Logger(), privkeys...)
+//
+//	// Register all the APIs exposed by the namespace services
+//	// TODO: handle allowlist and private APIs
+//	for _, api := range apis {
+//		if err := server.RegisterName(api.Namespace, api.Service); err != nil {
+//			panic(err)
+//		}
+//	}
+//
+//	// Web3 RPC API route
+//	rs.Mux.HandleFunc("/", server.ServeHTTP).Methods("POST", "OPTIONS")
+//
+//	// start websockets server
+//	websocketAddr := viper.GetString(flagWebsocket)
+//	ws := websockets.NewServer(rs.CliCtx, rs.Logger(), websocketAddr)
+//	ws.Start()
+//}
 
-	var privkeys []ethsecp256k1.PrivKey
-	if len(accountName) > 0 {
-		var err error
-		inBuf := bufio.NewReader(os.Stdin)
-
-		keyringBackend := viper.GetString(flags.FlagKeyringBackend)
-		passphrase := ""
-		switch keyringBackend {
-		case keyring.BackendOS:
-			break
-		case keyring.BackendFile:
-			passphrase, err = input.GetPassword(
-				"Enter password to unlock key for RPC API: ",
-				inBuf)
-			if err != nil {
-				panic(err)
-			}
-		}
-
-		privkeys, err = unlockKeyFromNameAndPassphrase(accountNames, passphrase)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	apis := GetAPIs(rs.CliCtx, rs.Logger(), privkeys...)
-
-	// Register all the APIs exposed by the namespace services
-	// TODO: handle allowlist and private APIs
-	for _, api := range apis {
-		if err := server.RegisterName(api.Namespace, api.Service); err != nil {
-			panic(err)
-		}
-	}
-
-	// Web3 RPC API route
-	rs.Mux.HandleFunc("/", server.ServeHTTP).Methods("POST", "OPTIONS")
-
-	// start websockets server
-	websocketAddr := viper.GetString(flagWebsocket)
-	ws := websockets.NewServer(rs.CliCtx, rs.Logger(), websocketAddr)
-	ws.Start()
-}
-
-func unlockKeyFromNameAndPassphrase(accountNames []string, passphrase string) ([]ethsecp256k1.PrivKey, error) {
+func UnlockKeyFromNameAndPassphrase(accountNames []string, passphrase string) ([]ethsecp256k1.PrivKey, error) {
 	kr, err := keyring.New(
 		sdk.KeyringServiceName(),
 		viper.GetString(flags.FlagKeyringBackend),
 		viper.GetString(evm.FlagUlockKeyHome),
 		os.Stdin,
-		hd.EthSecp256k1Option(),
+		keyring.EthSecp256k1Option(),
 	)
 	if err != nil {
 		return []ethsecp256k1.PrivKey{}, err

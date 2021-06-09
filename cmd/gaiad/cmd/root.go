@@ -5,6 +5,8 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/cosmos/cosmos-sdk/version"
+
 	"github.com/cosmos/cosmos-sdk/baseapp"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/debug"
@@ -13,6 +15,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/rpc"
 	"github.com/cosmos/cosmos-sdk/codec"
 	"github.com/cosmos/cosmos-sdk/server"
+	sdkserver "github.com/cosmos/cosmos-sdk/server"
 	servertypes "github.com/cosmos/cosmos-sdk/server/types"
 	"github.com/cosmos/cosmos-sdk/snapshots"
 	"github.com/cosmos/cosmos-sdk/store"
@@ -79,7 +82,30 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 		debug.Cmd(),
 	)
 
-	server.AddCommands(rootCmd, gaia.DefaultNodeHome, newApp, createSimappAndExport, addModuleInitFlags)
+	//server.AddCommands(rootCmd, gaia.DefaultNodeHome, newApp, createSimappAndExport, addModuleInitFlags)
+	tendermintCmd := &cobra.Command{
+		Use:   "tendermint",
+		Short: "Tendermint subcommands",
+	}
+
+	tendermintCmd.AddCommand(
+		sdkserver.ShowNodeIDCmd(),
+		sdkserver.ShowValidatorCmd(),
+		sdkserver.ShowAddressCmd(),
+		sdkserver.VersionCmd(),
+	)
+	startCmd := StartCmd(newApp, gaia.DefaultNodeHome)
+	addModuleInitFlags(startCmd)
+
+	rootCmd.AddCommand(
+		startCmd,
+		sdkserver.UnsafeResetAllCmd(),
+		flags.LineBreak,
+		tendermintCmd,
+		sdkserver.ExportCmd(createSimappAndExport, gaia.DefaultNodeHome),
+		flags.LineBreak,
+		version.NewVersionCommand(),
+	)
 
 	// add keybase, auxiliary RPC, query, and tx child commands
 	rootCmd.AddCommand(
