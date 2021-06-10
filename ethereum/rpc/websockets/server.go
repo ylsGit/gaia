@@ -47,7 +47,7 @@ func (s *Server) Start() {
 	ws.Handle("/", s)
 
 	go func() {
-		err := http.ListenAndServe(fmt.Sprintf(":%s", s.wsAddr), ws)
+		err := http.ListenAndServe(s.wsAddr, ws)
 		if err != nil {
 			s.logger.Error("http error:", err)
 		}

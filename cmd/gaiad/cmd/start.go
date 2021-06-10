@@ -20,7 +20,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/evm"
 
 	"github.com/gorilla/mux"
-	"github.com/prometheus/common/log"
 	"github.com/rs/cors"
 	"github.com/spf13/viper"
 
@@ -183,6 +182,8 @@ which accepts a path for the resulting pprof file.
 	cmd.Flags().Uint64(FlagStateSyncSnapshotInterval, 0, "State sync snapshot interval")
 	cmd.Flags().Uint32(FlagStateSyncSnapshotKeepRecent, 2, "State sync snapshot to keep")
 
+	cmd.Flags().String(flags.FlagKeyringBackend, flags.DefaultKeyringBackend, "Select keyring's backend (os|file|kwallet|pass|test)")
+
 	// add support for all Tendermint-specific command line options
 	tcmd.AddNodeFlags(cmd)
 	return cmd
@@ -293,12 +294,20 @@ func startInProcess(ctx *serversdk.Context, clientCtx client.Context, appCreator
 
 	config := config.GetConfig(ctx.Viper)
 
+	genDoc, err := genDocProvider()
+	if err != nil {
+		return err
+	}
+
+	clientCtx = clientCtx.
+		WithHomeDir(home).
+		WithChainID(genDoc.ChainID).
+		WithClient(local.New(tmNode))
+
 	// Add the tx service to the gRPC router. We only need to register this
 	// service if API or gRPC is enabled, and avoid doing so in the general
 	// case, because it spawns a new local tendermint RPC client.
 	if config.API.Enable || config.GRPC.Enable {
-		clientCtx = clientCtx.WithClient(local.New(tmNode))
-
 		app.RegisterTxService(clientCtx)
 		app.RegisterTendermintService(clientCtx)
 	}
@@ -306,15 +315,6 @@ func startInProcess(ctx *serversdk.Context, clientCtx client.Context, appCreator
 	var apiSrv *api.Server
 
 	if config.API.Enable {
-		genDoc, err := genDocProvider()
-		if err != nil {
-			return err
-		}
-
-		clientCtx := clientCtx.
-			WithHomeDir(home).
-			WithChainID(genDoc.ChainID)
-
 		apiSrv = api.New(clientCtx, ctx.Logger.With("module", "api-server"))
 		app.RegisterAPIRoutes(apiSrv, config.API)
 		errCh := make(chan error)
@@ -353,11 +353,10 @@ func startInProcess(ctx *serversdk.Context, clientCtx client.Context, appCreator
 
 		for _, api := range apis {
 			if err := rpcServer.RegisterName(api.Namespace, api.Service); err != nil {
-				//log.WithFields(log.Fields{
-				//	"namespace": api.Namespace,
-				//	"service":   api.Service,
-				//}).WithError(err).Fatalln("failed to register service in EVM RPC namespace")
-				panic(err)
+				ctx.Logger.Error("failed to register service in EVM RPC namespace",
+					"namespace", api.Namespace,
+					"service", api.Service,
+				)
 			}
 		}
 
@@ -390,7 +389,7 @@ func startInProcess(ctx *serversdk.Context, clientCtx client.Context, appCreator
 
 		errCh := make(chan error)
 		go func() {
-			log.Infoln("Starting EVM RPC server on", evmRPCAddress)
+			ctx.Logger.Info("Starting EVM RPC server on", evmRPCAddress)
 			if err := httpSrv.ListenAndServe(); err != nil {
 				errCh <- err
 			}
@@ -402,7 +401,7 @@ func startInProcess(ctx *serversdk.Context, clientCtx client.Context, appCreator
 		case <-time.After(5 * time.Second): // assume EVM RPC server started successfully
 		}
 
-		log.Infoln("Starting EVM WebSocket server on", evmRPCAddress)
+		ctx.Logger.Info("Starting EVM WebSocket server on", evmRPCAddress)
 		_, port, _ := net.SplitHostPort(evmRPCAddress)
 
 		// allocate separate WS connection to Tendermint
