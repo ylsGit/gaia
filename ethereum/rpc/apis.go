@@ -34,8 +34,8 @@ const (
 func GetRPCAPIs(clientCtx client.Context, log log.Logger, keys ...ethsecp256k1.PrivKey) []rpc.API {
 	nonceLock := new(rpctypes.AddrLocker)
 	rateLimiters := getRateLimiter()
-	ethBackend := backend.New(clientCtx, log, rateLimiters)
-	ethAPI := eth.NewAPI(clientCtx, log, ethBackend, nonceLock, keys...)
+	ethBackend := backend.New(clientCtx, log.With("module", "eth-api-backend"), rateLimiters)
+	ethAPI := eth.NewAPI(clientCtx, log.With("module", "eth-api-rpc"), ethBackend, nonceLock, keys...)
 	if evmtypes.GetEnableBloomFilter() {
 		server.TrapSignal(func() {
 			if ethBackend != nil {
