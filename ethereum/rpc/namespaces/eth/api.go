@@ -486,7 +486,7 @@ func (api *PublicEthereumAPI) SendRawTransaction(data hexutil.Bytes) (common.Has
 	// RLP decode raw transaction bytes
 	if err := rlp.DecodeBytes(data, tx); err != nil {
 		// Return nil is for when gasLimit overflows uint64
-		return common.Hash{}, nil
+		return common.Hash{}, err
 	}
 
 	// Encode transaction by default Tx encoder
