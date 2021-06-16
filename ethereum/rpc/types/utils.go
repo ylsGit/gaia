@@ -5,12 +5,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	sdk "github.com/cosmos/cosmos-sdk/types"
 	"math/big"
 	"reflect"
 
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
 	"github.com/ethereum/go-ethereum/common"
@@ -53,15 +53,15 @@ func NewTransaction(tx *evmtypes.MsgEthereumTx, txHash, blockHash common.Hash, b
 	rpcTx := &Transaction{
 		From:     from,
 		Gas:      hexutil.Uint64(tx.Data.GasLimit),
-		GasPrice: (*hexutil.Big)(tx.Data.Price.BigInt()),
+		GasPrice: (*hexutil.Big)(new(big.Int).SetBytes(tx.Data.Price)),
 		Hash:     txHash,
 		Input:    hexutil.Bytes(tx.Data.Payload),
 		Nonce:    hexutil.Uint64(tx.Data.AccountNonce),
 		To:       tx.To(),
-		Value:    (*hexutil.Big)(tx.Data.Amount.BigInt()),
-		V:        (*hexutil.Big)(tx.Data.V.BigInt()),
-		R:        (*hexutil.Big)(tx.Data.R.BigInt()),
-		S:        (*hexutil.Big)(tx.Data.S.BigInt()),
+		Value:    (*hexutil.Big)(new(big.Int).SetBytes(tx.Data.Amount)),
+		V:        (*hexutil.Big)(new(big.Int).SetBytes(tx.Data.V)),
+		R:        (*hexutil.Big)(new(big.Int).SetBytes(tx.Data.R)),
+		S:        (*hexutil.Big)(new(big.Int).SetBytes(tx.Data.S)),
 	}
 
 	if blockHash != (common.Hash{}) {
@@ -74,7 +74,7 @@ func NewTransaction(tx *evmtypes.MsgEthereumTx, txHash, blockHash common.Hash, b
 }
 
 // EthBlockFromTendermint returns a JSON-RPC compatible Ethereum blockfrom a given Tendermint block.
-func EthBlockFromTendermint(clientCtx client.Context,queryClient evmtypes.QueryClient, block *tmtypes.Block, fullTx bool) (map[string]interface{}, error) {
+func EthBlockFromTendermint(clientCtx client.Context, queryClient evmtypes.QueryClient, block *tmtypes.Block, fullTx bool) (map[string]interface{}, error) {
 	var blockTxs interface{}
 	gasLimit, err := BlockMaxGasFromConsensusParams(context.Background(), clientCtx)
 	if err != nil {

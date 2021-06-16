@@ -184,9 +184,9 @@ func (avd AccountVerificationDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, s
 
 	// get and set account must be called with an infinite gas meter in order to prevent
 	// additional gas from being deducted.
-	infCtx := ctx.WithGasMeter(sdk.NewInfiniteGasMeter())
+	//infCtx := ctx.WithGasMeter(sdk.NewInfiniteGasMeter())
 
-	evmDenom := avd.evmKeeper.GetParams(infCtx).EvmDenom
+	evmDenom := avd.evmKeeper.GetParams(ctx).EvmDenom
 
 	// sender address should be in the tx cache from the previous AnteHandle call
 	address := msgEthTx.From()
@@ -209,8 +209,8 @@ func (avd AccountVerificationDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, s
 	}
 
 	// validate sender has enough funds to pay for gas cost
-	balance := avd.bankKeeper.GetBalance(infCtx, address, evmDenom)
-	if balance.Amount.BigInt().Cmp(msgEthTx.Cost()) < 0 {
+	balance := avd.bankKeeper.GetBalance(ctx, address, evmDenom)
+	if sdk.NewDecFromBigInt(balance.Amount.BigInt()).BigInt().Cmp(msgEthTx.Cost()) < 0 {
 		return ctx, sdkerrors.Wrapf(
 			sdkerrors.ErrInsufficientFunds,
 			"sender balance < tx gas cost (%s%s < %s%s)", balance.String(), evmDenom, sdk.NewDecFromBigIntWithPrec(msgEthTx.Cost(), sdk.Precision).String(), evmDenom,

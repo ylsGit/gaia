@@ -43,7 +43,21 @@ func NewAnteHandler(
 		ctx sdk.Context, tx sdk.Tx, sim bool,
 	) (newCtx sdk.Context, err error) {
 		var anteHandler sdk.AnteHandler
+
 		switch tx.(type) {
+		case *evmtypes.MsgEthereumTx:
+			anteHandler = sdk.ChainAnteDecorators(
+				NewEthSetupContextDecorator(), // outermost AnteDecorator. EthSetUpContext must be called first
+				NewEthGasLimitDecorator(evmKeeper),
+				NewEthMempoolFeeDecorator(evmKeeper),
+				authante.TxTimeoutHeightDecorator{},
+				authante.NewValidateBasicDecorator(),
+				NewEthSigVerificationDecorator(evmKeeper),
+				NewEthAccountVerificationDecorator(ak, bankKeeper, evmKeeper),
+				NewEthNonceVerificationDecorator(ak),
+				NewEthGasConsumeDecorator(ak, bankKeeper, evmKeeper),
+				NewEthIncrementSenderSequenceDecorator(ak), // innermost AnteDecorator.
+			)
 		case sdk.Tx:
 			anteHandler = sdk.ChainAnteDecorators(
 				authante.NewSetUpContextDecorator(), // outermost AnteDecorator. SetUpContext must be called first
@@ -61,19 +75,6 @@ func NewAnteHandler(
 				authante.NewSigGasConsumeDecorator(ak, DefaultSigVerificationGasConsumer),
 				authante.NewSigVerificationDecorator(ak, signModeHandler),
 				authante.NewIncrementSequenceDecorator(ak),
-			)
-		case *evmtypes.MsgEthereumTx:
-			anteHandler = sdk.ChainAnteDecorators(
-				NewEthSetupContextDecorator(), // outermost AnteDecorator. EthSetUpContext must be called first
-				NewEthGasLimitDecorator(evmKeeper),
-				NewEthMempoolFeeDecorator(evmKeeper),
-				authante.TxTimeoutHeightDecorator{},
-				authante.NewValidateBasicDecorator(),
-				NewEthSigVerificationDecorator(evmKeeper),
-				NewEthAccountVerificationDecorator(ak, bankKeeper, evmKeeper),
-				NewEthNonceVerificationDecorator(ak),
-				NewEthGasConsumeDecorator(ak, bankKeeper, evmKeeper),
-				NewEthIncrementSenderSequenceDecorator(ak), // innermost AnteDecorator.
 			)
 		default:
 			return ctx, sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "invalid transaction type: %T", tx)
