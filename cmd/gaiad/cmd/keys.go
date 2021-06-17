@@ -10,6 +10,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 	"github.com/tendermint/tendermint/libs/cli"
+
+	"github.com/cosmos/gaia/v4/crypto/hd"
 )
 
 // keysCommands registers a sub-tree of commands to interact with
@@ -90,10 +92,10 @@ func runAddCmd(cmd *cobra.Command, args []string) error {
 
 	dryRun, _ := cmd.Flags().GetBool(flags.FlagDryRun)
 	if dryRun {
-		kr, err = keyring.New(sdk.KeyringServiceName(), keyring.BackendMemory, clientCtx.KeyringDir, buf, keyring.EthSecp256k1Option())
+		kr, err = keyring.New(sdk.KeyringServiceName(), keyring.BackendMemory, clientCtx.KeyringDir, buf, hd.EthSecp256k1Option())
 	} else {
 		backend, _ := cmd.Flags().GetString(flags.FlagKeyringBackend)
-		kr, err = keyring.New(sdk.KeyringServiceName(), backend, clientCtx.KeyringDir, buf, keyring.EthSecp256k1Option())
+		kr, err = keyring.New(sdk.KeyringServiceName(), backend, clientCtx.KeyringDir, buf, hd.EthSecp256k1Option())
 	}
 
 	if err != nil {

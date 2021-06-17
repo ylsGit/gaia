@@ -10,7 +10,7 @@ import (
 	"sync"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/x/evm"
+	"github.com/cosmos/gaia/v4/x/evm"
 	"github.com/ethereum/go-ethereum/rpc"
 	"github.com/gorilla/mux"
 	"github.com/gorilla/websocket"

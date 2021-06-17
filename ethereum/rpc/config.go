@@ -4,13 +4,16 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/viper"
+
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	sdkcrypto "github.com/cosmos/cosmos-sdk/crypto"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/evm"
-	"github.com/spf13/viper"
+
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
+	"github.com/cosmos/gaia/v4/crypto/hd"
+	"github.com/cosmos/gaia/v4/x/evm"
 )
 
 const (
@@ -77,7 +80,7 @@ func UnlockKeyFromNameAndPassphrase(accountNames []string, passphrase string) ([
 		viper.GetString(flags.FlagKeyringBackend),
 		viper.GetString(evm.FlagUlockKeyHome),
 		os.Stdin,
-		keyring.EthSecp256k1Option(),
+		hd.EthSecp256k1Option(),
 	)
 	if err != nil {
 		return []ethsecp256k1.PrivKey{}, err

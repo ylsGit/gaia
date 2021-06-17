@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/x/evm/types"
+	"github.com/cosmos/gaia/v4/x/evm/types"
 )
 
 // PublicNetAPI is the eth_ prefixed set of APIs in the Web3 JSON-RPC spec.

@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 
+	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client"
@@ -17,10 +18,11 @@ import (
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 	authvesting "github.com/cosmos/cosmos-sdk/x/auth/vesting/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
-	"github.com/cosmos/cosmos-sdk/x/evm/types"
 	"github.com/cosmos/cosmos-sdk/x/genutil"
 	genutiltypes "github.com/cosmos/cosmos-sdk/x/genutil/types"
-	ethcrypto "github.com/ethereum/go-ethereum/crypto"
+
+	"github.com/cosmos/gaia/v4/crypto/hd"
+	"github.com/cosmos/gaia/v4/x/evm/types"
 )
 
 const (
@@ -64,7 +66,7 @@ contain valid denominations. Accounts may optionally be supplied with vesting pa
 					keyringBackend,
 					clientCtx.HomeDir,
 					inBuf,
-					keyring.EthSecp256k1Option(),
+					hd.EthSecp256k1Option(),
 				)
 				if err != nil {
 					return err

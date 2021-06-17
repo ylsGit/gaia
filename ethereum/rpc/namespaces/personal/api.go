@@ -7,20 +7,20 @@ import (
 	"os"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/types"
-
-	"github.com/tendermint/tendermint/libs/log"
-
 	sdkcrypto "github.com/cosmos/cosmos-sdk/crypto"
-	"github.com/cosmos/cosmos-sdk/crypto/hd"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
-	"github.com/cosmos/gaia/v4/ethereum/rpc/namespaces/eth"
+	"github.com/cosmos/cosmos-sdk/types"
 	rpctypes "github.com/cosmos/gaia/v4/ethereum/rpc/types"
+
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	"github.com/ethereum/go-ethereum/crypto"
+	"github.com/tendermint/tendermint/libs/log"
+
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
+	"github.com/cosmos/gaia/v4/crypto/hd"
+	"github.com/cosmos/gaia/v4/ethereum/rpc/namespaces/eth"
 )
 
 // PrivateAccountAPI is the personal_ prefixed set of APIs in the Web3 JSON-RPC spec.

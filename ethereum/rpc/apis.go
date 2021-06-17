@@ -4,9 +4,9 @@ import (
 	"strings"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
 	"github.com/cosmos/cosmos-sdk/server"
-	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
+	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 	"github.com/cosmos/gaia/v4/ethereum/rpc/backend"
 	"github.com/cosmos/gaia/v4/ethereum/rpc/namespaces/eth"
 	"github.com/cosmos/gaia/v4/ethereum/rpc/namespaces/eth/filters"

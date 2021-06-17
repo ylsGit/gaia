@@ -17,8 +17,8 @@ import (
 	"github.com/ethereum/go-ethereum/rpc"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/cosmos/cosmos-sdk/x/evm"
-	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
+	"github.com/cosmos/gaia/v4/x/evm"
+	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 	rpctypes "github.com/cosmos/gaia/v4/ethereum/rpc/types"
 )
 

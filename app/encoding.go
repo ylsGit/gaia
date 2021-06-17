@@ -6,11 +6,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/legacy"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/std"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	"github.com/cosmos/cosmos-sdk/x/evm/types"
+	"github.com/cosmos/gaia/v4/x/evm/types"
 	"github.com/cosmos/gaia/v4/app/params"
 )
 

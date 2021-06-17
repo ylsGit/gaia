@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
+	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 	rpctypes "github.com/cosmos/gaia/v4/ethereum/rpc/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/bitutil"

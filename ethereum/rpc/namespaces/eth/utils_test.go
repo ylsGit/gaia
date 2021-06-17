@@ -3,7 +3,7 @@ package eth
 import (
 	"testing"
 
-	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
+	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 
 	"github.com/stretchr/testify/require"
 )

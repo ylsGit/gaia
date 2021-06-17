@@ -6,7 +6,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
-	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
+	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 )
 
 // MakeEncodingConfig creates an EncodingConfig for an amino based test configuration.

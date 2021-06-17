@@ -9,10 +9,10 @@ import (
 	"reflect"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
+	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"

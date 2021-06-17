@@ -3,15 +3,18 @@ package cmd
 import (
 	"bufio"
 
+	"github.com/cosmos/cosmos-sdk/client/input"
+
+	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
 
 	"github.com/cosmos/cosmos-sdk/client/flags"
-	"github.com/cosmos/cosmos-sdk/client/input"
 	"github.com/cosmos/cosmos-sdk/crypto"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/ethereum/go-ethereum/common"
+
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
+	"github.com/cosmos/gaia/v4/crypto/hd"
 )
 
 // UnsafeImportKeyCommand imports private keys from a keyfile.
@@ -35,7 +38,7 @@ func runImportCmd(cmd *cobra.Command, args []string) error {
 		keyringBackend,
 		rootDir,
 		inBuf,
-		keyring.EthSecp256k1Option(),
+		hd.EthSecp256k1Option(),
 	)
 	if err != nil {
 		return err

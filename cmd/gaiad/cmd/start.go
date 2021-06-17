@@ -16,8 +16,8 @@ import (
 
 	"github.com/cosmos/cosmos-sdk/client/input"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
-	"github.com/cosmos/cosmos-sdk/x/evm"
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
+	"github.com/cosmos/gaia/v4/x/evm"
 
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"

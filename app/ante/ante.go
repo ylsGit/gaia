@@ -1,14 +1,14 @@
 package ante
 
 import (
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
+	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 )
 
 const (

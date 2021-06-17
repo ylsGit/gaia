@@ -24,7 +24,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"github.com/cosmos/cosmos-sdk/x/crisis"
-	"github.com/cosmos/cosmos-sdk/x/evm"
+	"github.com/cosmos/gaia/v4/x/evm"
 	genutilcli "github.com/cosmos/cosmos-sdk/x/genutil/client/cli"
 	gaia "github.com/cosmos/gaia/v4/app"
 	"github.com/cosmos/gaia/v4/app/params"

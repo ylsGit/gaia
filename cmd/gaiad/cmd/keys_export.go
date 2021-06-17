@@ -9,11 +9,14 @@ import (
 	"github.com/cosmos/cosmos-sdk/client/input"
 	"github.com/cosmos/cosmos-sdk/crypto"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
+
 	"github.com/ethereum/go-ethereum/common/hexutil"
 	ethcrypto "github.com/ethereum/go-ethereum/crypto"
 	"github.com/spf13/cobra"
+
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
+	"github.com/cosmos/gaia/v4/crypto/hd"
 )
 
 // UnsafeExportEthKeyCommand exports a key with the given name as a private key in hex format.
@@ -34,7 +37,7 @@ func UnsafeExportEthKeyCommand() *cobra.Command {
 				keyringBackend,
 				rootDir,
 				inBuf,
-				keyring.EthSecp256k1Option(),
+				hd.EthSecp256k1Option(),
 			)
 			if err != nil {
 				return err

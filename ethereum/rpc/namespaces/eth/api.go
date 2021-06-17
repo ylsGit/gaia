@@ -10,10 +10,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/cosmos/cosmos-sdk/crypto/keys/ethsecp256k1"
-	evmtypes "github.com/cosmos/cosmos-sdk/x/evm/types"
-	"github.com/cosmos/gaia/v4/ethereum/rpc/backend"
 	rpctypes "github.com/cosmos/gaia/v4/ethereum/rpc/types"
+	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 	"github.com/ethereum/go-ethereum/accounts"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/gogo/protobuf/jsonpb"
@@ -35,7 +33,11 @@ import (
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	"github.com/cosmos/cosmos-sdk/x/evm"
+
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
+	"github.com/cosmos/gaia/v4/crypto/hd"
+	"github.com/cosmos/gaia/v4/ethereum/rpc/backend"
+	"github.com/cosmos/gaia/v4/x/evm"
 )
 
 const (
@@ -101,7 +103,7 @@ func (api *PublicEthereumAPI) GetKeyringInfo() error {
 		viper.GetString(flags.FlagKeyringBackend),
 		viper.GetString(evm.FlagUlockKeyHome),
 		api.clientCtx.Input,
-		keyring.EthSecp256k1Option(),
+		hd.EthSecp256k1Option(),
 	)
 	if err != nil {
 		return err
