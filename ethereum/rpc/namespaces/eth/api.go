@@ -578,48 +578,15 @@ func (api *PublicEthereumAPI) doCall(
 		data = []byte(*args.Data)
 	}
 
-	// Set destination address for call
-	var toAddr sdk.AccAddress
-	if args.To != nil {
-		toAddr = sdk.AccAddress(args.To.Bytes())
+	tx := evmtypes.NewMsgEthereumTx(nonce, args.To, value, gas, gasPrice, data)
+	tx.From = args.From.String()
+
+	if err := tx.ValidateBasic(); err != nil {
+		return nil, err
 	}
-
-	var msgs []sdk.Msg
-	// Create new call message
-	msg := evmtypes.NewMsgEthermint(nonce, &toAddr, sdk.NewIntFromBigInt(value), gas,
-		sdk.NewIntFromBigInt(gasPrice), data, sdk.AccAddress(addr.Bytes()))
-	msgs = append(msgs, msg)
-	fees := sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewIntFromBigInt(msg.Fee())))
-
-	// convert the pending transactions into ethermint msgs
-	//if blockNum == rpctypes.PendingBlockNumber {
-	//	pendingMsgs, err := api.pendingMsgs()
-	//	if err != nil {
-	//		return nil, err
-	//	}
-	//	msgs = append(msgs, pendingMsgs...)
-	//}
-
-	// Generate tx to be used to simulate (signature isn't needed)
-	//var stdSig authtypes.StdSignature
-	//stdSigs := []authtypes.StdSignature{stdSig}
-	//
-	//tx := authtypes.NewStdTx(msgs, authtypes.StdFee{}, stdSigs, "")
-	//if err := tx.ValidateBasic(); err != nil {
-	//	return nil, err
-	//}
-
-	// Create a TxBuilder
-	txBuilder := api.clientCtx.TxConfig.NewTxBuilder()
-	if err := txBuilder.SetMsgs(msgs...); err != nil {
-		panic("builder.SetMsgs failed")
-	}
-
-	txBuilder.SetFeeAmount(fees)
-	txBuilder.SetGasLimit(gas)
 
 	txEncoder := api.clientCtx.TxConfig.TxEncoder()
-	txBytes, err := txEncoder(txBuilder.GetTx())
+	txBytes, err := txEncoder(tx)
 	if err != nil {
 		return nil, err
 	}
@@ -1085,8 +1052,9 @@ func (api *PublicEthereumAPI) generateFromArgs(args rpctypes.SendTxArgs) (*evmty
 		gasLimit = (uint64)(*args.Gas)
 	}
 	msg := evmtypes.NewMsgEthereumTx(nonce, args.To, amount, gasLimit, gasPrice, input)
+	msg.From = args.From.String()
 
-	return &msg, nil
+	return msg, nil
 }
 
 // pendingMsgs constructs an array of sdk.Msg. This method will check pending transactions and convert

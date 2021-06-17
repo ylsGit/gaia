@@ -132,6 +132,11 @@ func NewEthSigVerificationDecorator(ek EVMKeeper) EthSigVerificationDecorator {
 
 // AnteHandle validates the signature and returns sender address
 func (esvd EthSigVerificationDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simulate bool, next sdk.AnteHandler) (newCtx sdk.Context, err error) {
+	// no need to verify signatures on recheck tx
+	if ctx.IsReCheckTx() || simulate {
+		return next(ctx, tx, simulate)
+	}
+
 	msgEthTx, ok := tx.(*evmtypes.MsgEthereumTx)
 	if !ok {
 		return ctx, sdkerrors.Wrapf(sdkerrors.ErrUnknownRequest, "invalid transaction type: %T", tx)
@@ -189,7 +194,7 @@ func (avd AccountVerificationDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, s
 	evmDenom := avd.evmKeeper.GetParams(ctx).EvmDenom
 
 	// sender address should be in the tx cache from the previous AnteHandle call
-	address := msgEthTx.From()
+	address := msgEthTx.GetFrom()
 	if address.Empty() {
 		panic("sender address cannot be empty")
 	}
@@ -242,7 +247,7 @@ func (nvd NonceVerificationDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, sim
 	}
 
 	// sender address should be in the tx cache from the previous AnteHandle call
-	address := msgEthTx.From()
+	address := msgEthTx.GetFrom()
 	if address.Empty() {
 		panic("sender address cannot be empty")
 	}
@@ -316,7 +321,7 @@ func (egcd EthGasConsumeDecorator) AnteHandle(ctx sdk.Context, tx sdk.Tx, simula
 	}
 
 	// sender address should be in the tx cache from the previous AnteHandle call
-	address := msgEthTx.From()
+	address := msgEthTx.GetFrom()
 	if address.Empty() {
 		panic("sender address cannot be empty")
 	}
