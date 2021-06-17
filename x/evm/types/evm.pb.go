@@ -113,14 +113,17 @@ func (m *Params) GetEvmDenom() string {
 	return ""
 }
 
-// ChainConfig defines the Ethereum ChainConfig parameters using sdk.Int values instead of big.Int.
+// ChainConfig defines the Ethereum ChainConfig parameters using sdk.Int values
+// instead of big.Int.
 //
-// NOTE 1: Since empty/uninitialized Ints (i.e with a nil big.Int value) are parsed to zero, we need to manually
-// specify that negative Int values will be considered as nil. See getBlockValue for reference.
+// NOTE 1: Since empty/uninitialized Ints (i.e with a nil big.Int value) are
+// parsed to zero, we need to manually specify that negative Int values will be
+// considered as nil. See getBlockValue for reference.
 //
-// NOTE 2: This type is not a configurable Param since the SDK does not allow for validation against
-// a previous stored parameter values or the current block height (retrieved from context). If you
-// want to update the config values, use an software upgrade procedure.
+// NOTE 2: This type is not a configurable Param since the SDK does not allow
+// for validation against a previous stored parameter values or the current
+// block height (retrieved from context). If you want to update the config
+// values, use an software upgrade procedure.
 type ChainConfig struct {
 	// Homestead switch block (< 0 no fork, 0 = already homestead)
 	HomesteadBlock github_com_cosmos_cosmos_sdk_types.Int `protobuf:"bytes,1,opt,name=homestead_block,json=homesteadBlock,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Int" json:"homestead_block" yaml:"homestead_block"`

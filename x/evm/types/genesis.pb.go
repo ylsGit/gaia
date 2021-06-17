@@ -93,9 +93,9 @@ func (m *GenesisState) GetParams() Params {
 }
 
 // GenesisAccount defines an account to be initialized in the genesis state.
-// Its main difference between with Geth's GenesisAccount is that it uses a custom
-// storage type and that it doesn't contain the private key field.
-// NOTE: balance is omitted as it is imported from the auth account balance.
+// Its main difference between with Geth's GenesisAccount is that it uses a
+// custom storage type and that it doesn't contain the private key field. NOTE:
+// balance is omitted as it is imported from the auth account balance.
 type GenesisAccount struct {
 	Address string  `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 	Code    string  `protobuf:"bytes,2,opt,name=code,proto3" json:"code,omitempty"`

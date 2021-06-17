@@ -7,7 +7,7 @@ import "gogoproto/gogo.proto";
 
 // Params defines the parameters for the evm module.
 message TransactionLogs {
-  string   hash = 1;
+  string hash = 1;
   repeated Log logs = 2;
 }
 
@@ -26,15 +26,15 @@ message Log {
   // but not secured by consensus.
 
   // block in which the transaction was included
-  uint64 block_number = 4 [(gogoproto.jsontag) = "blockNumber"];
+  uint64 block_number = 4 [ (gogoproto.jsontag) = "blockNumber" ];
   // hash of the transaction
-  string tx_hash = 5 [(gogoproto.jsontag) = "transactionHash"];
+  string tx_hash = 5 [ (gogoproto.jsontag) = "transactionHash" ];
   // index of the transaction in the block
-  uint64 tx_index = 6 [(gogoproto.jsontag) = "transactionIndex"];
+  uint64 tx_index = 6 [ (gogoproto.jsontag) = "transactionIndex" ];
   // hash of the block in which the transaction was included
-  string block_hash = 7 [(gogoproto.jsontag) = "blockHash"];
+  string block_hash = 7 [ (gogoproto.jsontag) = "blockHash" ];
   // index of the log in the block
-  uint64 index = 8 [(gogoproto.jsontag) = "logIndex"];
+  uint64 index = 8 [ (gogoproto.jsontag) = "logIndex" ];
 
   // The Removed field is true if this log was reverted due to a chain
   // reorganisation. You must pay attention to this field if you receive logs

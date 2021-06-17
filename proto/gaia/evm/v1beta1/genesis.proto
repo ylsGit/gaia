@@ -10,21 +10,25 @@ import "gaia/evm/v1beta1/evm.proto";
 
 // GenesisState defines the evm module's genesis state.
 message GenesisState {
-  repeated GenesisAccount accounts = 1 [(gogoproto.nullable) = false];
-  repeated TransactionLogs        txs_logs = 2 [(gogoproto.moretags) = "yaml:\"txs_logs\"", (gogoproto.nullable) = false];
-  ChainConfig chain_config = 5 [(gogoproto.moretags) = "yaml:\"chain_config\"", (gogoproto.nullable) = false];
-  Params      params       = 6 [(gogoproto.nullable) = false];
+  repeated GenesisAccount accounts = 1 [ (gogoproto.nullable) = false ];
+  repeated TransactionLogs txs_logs = 2 [
+    (gogoproto.moretags) = "yaml:\"txs_logs\"",
+    (gogoproto.nullable) = false
+  ];
+  ChainConfig chain_config = 5 [
+    (gogoproto.moretags) = "yaml:\"chain_config\"",
+    (gogoproto.nullable) = false
+  ];
+  Params params = 6 [ (gogoproto.nullable) = false ];
 }
 
 // GenesisAccount defines an account to be initialized in the genesis state.
-// Its main difference between with Geth's GenesisAccount is that it uses a custom
-// storage type and that it doesn't contain the private key field.
-// NOTE: balance is omitted as it is imported from the auth account balance.
+// Its main difference between with Geth's GenesisAccount is that it uses a
+// custom storage type and that it doesn't contain the private key field. NOTE:
+// balance is omitted as it is imported from the auth account balance.
 message GenesisAccount {
-  string  address = 1;
-  string  code    = 2;
-  repeated State storage = 3 [
-    (gogoproto.castrepeated) = "Storage",
-    (gogoproto.nullable) = false
-  ];
+  string address = 1;
+  string code = 2;
+  repeated State storage = 3
+      [ (gogoproto.castrepeated) = "Storage", (gogoproto.nullable) = false ];
 }

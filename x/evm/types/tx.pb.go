@@ -35,9 +35,9 @@ type MsgEthereumTx struct {
 	Data *TxData `protobuf:"bytes,1,opt,name=data,proto3" json:"data,omitempty"`
 	// encoded storage size of the transaction
 	Size_ float64 `protobuf:"fixed64,2,opt,name=size,proto3" json:"-"`
-	// ethereum signer address in hex format. This address value is checked against
-	// the address derived from the signature (V, R, S) using the secp256k1
-	// elliptic curve
+	// ethereum signer address in hex format. This address value is checked
+	// against the address derived from the signature (V, R, S) using the
+	// secp256k1 elliptic curve
 	From   string        `protobuf:"bytes,3,opt,name=from,proto3" json:"from,omitempty"`
 	Signer *EIP155Signer `protobuf:"bytes,4,opt,name=signer,proto3" json:"-"`
 }

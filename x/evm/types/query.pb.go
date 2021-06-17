@@ -716,15 +716,18 @@ type QueryClient interface {
 	Code(ctx context.Context, in *QueryCodeRequest, opts ...grpc.CallOption) (*QueryCodeResponse, error)
 	//
 	//    rpc BlockNumber(QueryBlockNumberRequest) returns (QueryParamsResponse) {
-	//        option (google.api.http).get = "/cosmos/evm/v1beta1/blocks/number/latest";
+	//        option (google.api.http).get =
+	//        "/cosmos/evm/v1beta1/blocks/number/latest";
 	//    }
 	//    // HashToHeight queries the block height by a block hash.
 	//    rpc HashToHeight(QueryHeightRequest) returns (QueryHeightResponse) {
-	//        option (google.api.http).get = "/cosmos/evm/v1beta1/blocks/number/{hash}";
+	//        option (google.api.http).get =
+	//        "/cosmos/evm/v1beta1/blocks/number/{hash}";
 	//    }
 	//    // HeightToHash queries the block hash by a block height.
 	//    rpc HeightToHash(QueryHashRequest) returns (QueryHashResponse) {
-	//        option (google.api.http).get = "/cosmos/evm/v1beta1/blocks/hash/{height}";
+	//        option (google.api.http).get =
+	//        "/cosmos/evm/v1beta1/blocks/hash/{height}";
 	//    }
 	// BlockBloom queries the block bloom filter bytes at a given height.
 	BlockBloom(ctx context.Context, in *QueryBlockBloomRequest, opts ...grpc.CallOption) (*QueryBlockBloomResponse, error)
@@ -732,7 +735,8 @@ type QueryClient interface {
 	Account(ctx context.Context, in *QueryAccountRequest, opts ...grpc.CallOption) (*QueryAccountResponse, error)
 	//    //
 	//    rpc ExportAccount(QueryParamsRequest) returns (QueryParamsResponse) {
-	//        option (google.api.http).get = "/cosmos/evm/v1beta1/account/export/{address}";
+	//        option (google.api.http).get =
+	//        "/cosmos/evm/v1beta1/account/export/{address}";
 	//    }
 	// Params queries the parameters of x/evm module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
@@ -810,15 +814,18 @@ type QueryServer interface {
 	Code(context.Context, *QueryCodeRequest) (*QueryCodeResponse, error)
 	//
 	//    rpc BlockNumber(QueryBlockNumberRequest) returns (QueryParamsResponse) {
-	//        option (google.api.http).get = "/cosmos/evm/v1beta1/blocks/number/latest";
+	//        option (google.api.http).get =
+	//        "/cosmos/evm/v1beta1/blocks/number/latest";
 	//    }
 	//    // HashToHeight queries the block height by a block hash.
 	//    rpc HashToHeight(QueryHeightRequest) returns (QueryHeightResponse) {
-	//        option (google.api.http).get = "/cosmos/evm/v1beta1/blocks/number/{hash}";
+	//        option (google.api.http).get =
+	//        "/cosmos/evm/v1beta1/blocks/number/{hash}";
 	//    }
 	//    // HeightToHash queries the block hash by a block height.
 	//    rpc HeightToHash(QueryHashRequest) returns (QueryHashResponse) {
-	//        option (google.api.http).get = "/cosmos/evm/v1beta1/blocks/hash/{height}";
+	//        option (google.api.http).get =
+	//        "/cosmos/evm/v1beta1/blocks/hash/{height}";
 	//    }
 	// BlockBloom queries the block bloom filter bytes at a given height.
 	BlockBloom(context.Context, *QueryBlockBloomRequest) (*QueryBlockBloomResponse, error)
@@ -826,7 +833,8 @@ type QueryServer interface {
 	Account(context.Context, *QueryAccountRequest) (*QueryAccountResponse, error)
 	//    //
 	//    rpc ExportAccount(QueryParamsRequest) returns (QueryParamsResponse) {
-	//        option (google.api.http).get = "/cosmos/evm/v1beta1/account/export/{address}";
+	//        option (google.api.http).get =
+	//        "/cosmos/evm/v1beta1/account/export/{address}";
 	//    }
 	// Params queries the parameters of x/evm module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
