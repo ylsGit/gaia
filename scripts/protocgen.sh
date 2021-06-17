@@ -33,6 +33,8 @@ for dir in $proto_dirs; do
   --grpc-gateway_out=logtostderr=true:. \
   $(find "${dir}" -maxdepth 1 -name '*.proto')
 
+  # format proto file
+  find "${dir}" -maxdepth 1 -name '*.proto' -exec clang-format -i {} \;
 done
 
 # command to generate docs using protoc-gen-doc
