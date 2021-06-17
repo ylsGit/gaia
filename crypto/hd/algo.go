@@ -38,7 +38,6 @@ func EthSecp256k1Option() keyring.Option {
 		options.SupportedAlgos = SupportedAlgorithms
 		options.SupportedAlgosLedger = SupportedAlgorithmsLedger
 	}
-
 }
 
 var (
