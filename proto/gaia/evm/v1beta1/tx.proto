@@ -11,8 +11,6 @@ import "gaia/evm/v1beta1/txlog.proto";
 service Msg {
   // EthereumTx defines a method submitting Ethereum transactions.
   rpc EthereumTx(MsgEthereumTx) returns (MsgEthereumTxResponse);
-  // Ethereum defines a method submitting Ethermint transactions.
-  rpc Ethermint(MsgEthermint) returns (MsgEthermintResponse);
 }
 
 // MsgEthereumTx encapsulates an Ethereum transaction as an SDK message.
@@ -29,7 +27,6 @@ message MsgEthereumTx {
   // secp256k1 elliptic curve
   string from = 3;
   EIP155Signer signer = 4 [ (gogoproto.jsontag) = "-" ];
-  ;
 }
 
 // MsgEthereumTxResponse defines the Msg/EthereumTx response type.
@@ -81,38 +78,6 @@ message TxData {
   // hash defines the tx data hash, which is only used when marshaling to JSON.
   string hash = 10 [ (gogoproto.moretags) = "rlp:\"-\"" ];
 }
-
-// MsgEthermint encapsulates an Ethermint transaction as an SDK message.
-message MsgEthermint {
-  option (gogoproto.goproto_getters) = false;
-
-  // nonce corresponds to the account nonce (transaction sequence).
-  uint64 nonce = 1 [ (gogoproto.customname) = "AccountNonce" ];
-  // price defines the unsigned integer value of the gas price in bytes.
-  string price = 2 [
-    (gogoproto.jsontag) = "gasPrice",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-  // gas defines the gas limit defined for the transaction.
-  uint64 gas = 3 [ (gogoproto.customname) = "GasLimit" ];
-  string to = 4 [
-    (gogoproto.customname) = "Recipient",
-    (gogoproto.moretags) = "rlp:\"nil\""
-  ];
-  // value defines the unsigned integer value of the transaction amount.
-  string value = 5 [
-    (gogoproto.customname) = "Amount",
-    (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Int",
-    (gogoproto.nullable) = false
-  ];
-  // input defines the data payload bytes of the transaction.
-  bytes input = 6 [ (gogoproto.customname) = "Payload" ];
-  string from = 7;
-}
-
-// MsgEthermintResponse defines the Msg/Ethermint response type.
-message MsgEthermintResponse {}
 
 // EIP155Transaction implements Signer using the EIP155 rules.
 message EIP155Signer {

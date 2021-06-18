@@ -1,13 +1,13 @@
 package ante
 
 import (
-	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/cosmos-sdk/types/tx/signing"
 	authante "github.com/cosmos/cosmos-sdk/x/auth/ante"
 	authsigning "github.com/cosmos/cosmos-sdk/x/auth/signing"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
 	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 )
 
@@ -61,7 +61,6 @@ func NewAnteHandler(
 		case sdk.Tx:
 			anteHandler = sdk.ChainAnteDecorators(
 				authante.NewSetUpContextDecorator(), // outermost AnteDecorator. SetUpContext must be called first
-				NewAccountSetupDecorator(ak),
 				authante.NewRejectExtensionOptionsDecorator(),
 				authante.NewMempoolFeeDecorator(),
 				authante.NewValidateBasicDecorator(),

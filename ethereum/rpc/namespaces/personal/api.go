@@ -184,12 +184,12 @@ func (api *PrivateAccountAPI) UnlockAccount(_ context.Context, addr common.Addre
 	}
 
 	// Converts key to Ethermint secp256 implementation
-	ethermintPrivKey, ok := privKey.(*ethsecp256k1.PrivKey)
+	ethPrivKey, ok := privKey.(*ethsecp256k1.PrivKey)
 	if !ok {
 		return false, fmt.Errorf("invalid private key type %T, expected %T", privKey, &ethsecp256k1.PrivKey{})
 	}
 
-	api.ethAPI.SetKeys(append(api.ethAPI.GetKeys(), *ethermintPrivKey))
+	api.ethAPI.SetKeys(append(api.ethAPI.GetKeys(), *ethPrivKey))
 	api.logger.Debug("account unlocked", "address", addr.String())
 	return true, nil
 }

@@ -55,7 +55,7 @@ func (acc EthAccount) EthAddress() ethcmn.Address {
 //	}
 //}
 
-type ethermintAccountPretty struct {
+type ethAccountPretty struct {
 	Address       sdk.AccAddress `json:"address" yaml:"address"`
 	EthAddress    string         `json:"eth_address" yaml:"eth_address"`
 	Coins         sdk.Coins      `json:"coins" yaml:"coins"`
@@ -103,7 +103,7 @@ func (acc EthAccount) MarshalJSON() ([]byte, error) {
 		ethAddress = acc.EthAddress().String()
 	}
 
-	alias := ethermintAccountPretty{
+	alias := ethAccountPretty{
 		Address:    acc.GetAddress(),
 		EthAddress: ethAddress,
 		//Coins:         acc.Coins,
@@ -127,7 +127,7 @@ func (acc EthAccount) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON unmarshals raw JSON bytes into an EthAccount.
 func (acc *EthAccount) UnmarshalJSON(bz []byte) error {
 	var (
-		alias ethermintAccountPretty
+		alias ethAccountPretty
 		err   error
 	)
 

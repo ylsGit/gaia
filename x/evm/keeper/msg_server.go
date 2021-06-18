@@ -8,7 +8,6 @@ import (
 	tmtypes "github.com/tendermint/tendermint/types"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	"github.com/cosmos/gaia/v4/x/evm/types"
 )
 
@@ -103,96 +102,4 @@ func (k msgServer) EthereumTx(goCtx context.Context, msg *types.MsgEthereumTx) (
 	}
 
 	return resultData, nil
-}
-
-func (k msgServer) Ethermint(goCtx context.Context, msg *types.MsgEthermint) (*types.MsgEthermintResponse, error) {
-	ctx := sdk.UnwrapSDKContext(goCtx)
-
-	if !ctx.IsCheckTx() && !ctx.IsReCheckTx() {
-		return nil, sdkerrors.Wrap(types.ErrInvalidMsgType, "Ethermint type message is not allowed.")
-	}
-
-	// parse the chainID from a string to a base-10 integer
-	chainIDEpoch, err := types.ParseChainID(ctx.ChainID())
-	if err != nil {
-		return nil, err
-	}
-
-	txHash := tmtypes.Tx(ctx.TxBytes()).Hash()
-	ethHash := common.BytesToHash(txHash)
-	sender, err := sdk.AccAddressFromBech32(msg.From)
-	if err != nil {
-		return nil, err
-	}
-
-	st := types.StateTransition{
-		AccountNonce: msg.AccountNonce,
-		Price:        msg.Price.BigInt(),
-		GasLimit:     msg.GasLimit,
-		Amount:       msg.Amount.BigInt(),
-		Payload:      msg.Payload,
-		Csdb:         types.CreateEmptyCommitStateDB(k.GenerateCSDBParams(), ctx),
-		ChainID:      chainIDEpoch,
-		TxHash:       &ethHash,
-		Sender:       common.BytesToAddress(sender.Bytes()),
-		Simulate:     ctx.IsCheckTx(),
-	}
-
-	if msg.Recipient != "" {
-		recipient, err := sdk.AccAddressFromBech32(msg.Recipient)
-		if err != nil {
-			return nil, err
-		}
-		to := common.BytesToAddress(recipient.Bytes())
-		st.Recipient = &to
-	}
-
-	if !st.Simulate {
-		// Prepare db for logs
-		st.Csdb.Prepare(ethHash, k.Bhash, k.TxCount)
-		st.Csdb.SetLogSize(k.LogSize)
-		k.TxCount++
-	}
-
-	config, found := k.GetChainConfig(ctx)
-	if !found {
-		return nil, types.ErrChainConfigNotFound
-	}
-
-	executionResult, _, err := st.TransitionDb(ctx, config)
-	if err != nil {
-		return nil, err
-	}
-
-	// update block bloom filter
-	if !st.Simulate {
-		k.Bloom.Or(k.Bloom, executionResult.Bloom)
-		k.LogSize = st.Csdb.GetLogSize()
-	}
-
-	// log successful execution
-	k.Logger(ctx).Info(executionResult.Result.Log)
-
-	ctx.EventManager().EmitEvents(sdk.Events{
-		sdk.NewEvent(
-			types.EventTypeEthermint,
-			sdk.NewAttribute(sdk.AttributeKeyAmount, msg.Amount.String()),
-		),
-		sdk.NewEvent(
-			sdk.EventTypeMessage,
-			sdk.NewAttribute(sdk.AttributeKeyModule, types.AttributeValueCategory),
-			sdk.NewAttribute(sdk.AttributeKeySender, msg.From),
-		),
-	})
-
-	if msg.Recipient != "" {
-		ctx.EventManager().EmitEvent(
-			sdk.NewEvent(
-				types.EventTypeEthermint,
-				sdk.NewAttribute(types.AttributeKeyRecipient, msg.Recipient),
-			),
-		)
-	}
-
-	return &types.MsgEthermintResponse{}, nil
 }

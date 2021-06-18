@@ -107,11 +107,11 @@ func UnlockKeyFromNameAndPassphrase(accountNames []string, passphrase string) ([
 		}
 
 		// Converts key to Ethermint secp256 implementation
-		ethermintPrivKey, ok := privKey.(*ethsecp256k1.PrivKey)
+		ethPrivKey, ok := privKey.(*ethsecp256k1.PrivKey)
 		if !ok {
 			panic(fmt.Sprintf("invalid private key type %T at index %d", privKey, i))
 		}
-		keys[i] = *ethermintPrivKey
+		keys[i] = *ethPrivKey
 	}
 
 	return keys, nil

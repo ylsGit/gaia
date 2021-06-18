@@ -4,8 +4,6 @@ import (
 	"context"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	rpctypes "github.com/cosmos/gaia/v4/ethereum/rpc/types"
-	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/bitutil"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -14,10 +12,13 @@ import (
 	"github.com/tendermint/tendermint/libs/log"
 	dbm "github.com/tendermint/tm-db"
 	"golang.org/x/time/rate"
+
+	rpctypes "github.com/cosmos/gaia/v4/ethereum/rpc/types"
+	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 )
 
 // Backend implements the functionality needed to filter changes.
-// Implemented by EthermintBackend.
+// Implemented by EVMBackend.
 type Backend interface {
 	// Used by block filter; also used for polling
 	BlockNumber() (hexutil.Uint64, error)
@@ -43,10 +44,10 @@ type Backend interface {
 	ServiceFilter(ctx context.Context, session *bloombits.MatcherSession)
 }
 
-var _ Backend = (*EthermintBackend)(nil)
+var _ Backend = (*EVMBackend)(nil)
 
-// EthermintBackend implements the Backend interface
-type EthermintBackend struct {
+// EVMBackend implements the Backend interface
+type EVMBackend struct {
 	ctx               context.Context
 	clientCtx         client.Context
 	queryClient       evmtypes.QueryClient // gRPC query client
@@ -57,9 +58,9 @@ type EthermintBackend struct {
 	rateLimiters      map[string]*rate.Limiter
 }
 
-// New creates a new EthermintBackend instance
-func New(clientCtx client.Context, log log.Logger, rateLimiters map[string]*rate.Limiter) *EthermintBackend {
-	return &EthermintBackend{
+// New creates a new EVMBackend instance
+func New(clientCtx client.Context, log log.Logger, rateLimiters map[string]*rate.Limiter) *EVMBackend {
+	return &EVMBackend{
 		ctx:               context.Background(),
 		clientCtx:         clientCtx,
 		logger:            log.With("module", "json-rpc"),
@@ -73,7 +74,7 @@ func New(clientCtx client.Context, log log.Logger, rateLimiters map[string]*rate
 }
 
 // BlockNumber returns the current block number.
-func (b *EthermintBackend) BlockNumber() (hexutil.Uint64, error) {
+func (b *EVMBackend) BlockNumber() (hexutil.Uint64, error) {
 	blockNumber, err := b.LatestBlockNumber()
 	if err != nil {
 		return hexutil.Uint64(0), err
@@ -87,7 +88,7 @@ func (b *EthermintBackend) BlockNumber() (hexutil.Uint64, error) {
 }
 
 // GetBlockByNumber returns the block identified by number.
-func (b *EthermintBackend) GetBlockByNumber(blockNum rpctypes.BlockNumber, fullTx bool) (interface{}, error) {
+func (b *EVMBackend) GetBlockByNumber(blockNum rpctypes.BlockNumber, fullTx bool) (interface{}, error) {
 	height := blockNum.Int64()
 	if height <= 0 {
 		// get latest block height
@@ -108,7 +109,7 @@ func (b *EthermintBackend) GetBlockByNumber(blockNum rpctypes.BlockNumber, fullT
 }
 
 // GetBlockByHash returns the block identified by hash.
-func (b *EthermintBackend) GetBlockByHash(hash common.Hash, fullTx bool) (interface{}, error) {
+func (b *EVMBackend) GetBlockByHash(hash common.Hash, fullTx bool) (interface{}, error) {
 	resBlock, err := b.clientCtx.Client.BlockByHash(b.ctx, hash.Bytes())
 	if err != nil {
 		return nil, nil
@@ -118,7 +119,7 @@ func (b *EthermintBackend) GetBlockByHash(hash common.Hash, fullTx bool) (interf
 }
 
 // HeaderByNumber returns the block header identified by height.
-func (b *EthermintBackend) HeaderByNumber(blockNum rpctypes.BlockNumber) (*ethtypes.Header, error) {
+func (b *EVMBackend) HeaderByNumber(blockNum rpctypes.BlockNumber) (*ethtypes.Header, error) {
 	height := blockNum.Int64()
 	if height <= 0 {
 		// get latest block height
@@ -147,7 +148,7 @@ func (b *EthermintBackend) HeaderByNumber(blockNum rpctypes.BlockNumber) (*ethty
 }
 
 // HeaderByHash returns the block header identified by hash.
-func (b *EthermintBackend) HeaderByHash(blockHash common.Hash) (*ethtypes.Header, error) {
+func (b *EVMBackend) HeaderByHash(blockHash common.Hash) (*ethtypes.Header, error) {
 	resBlock, err := b.clientCtx.Client.BlockByHash(b.ctx, blockHash.Bytes())
 	if err != nil {
 		return nil, err
@@ -167,7 +168,7 @@ func (b *EthermintBackend) HeaderByHash(blockHash common.Hash) (*ethtypes.Header
 // GetTransactionLogs returns the logs given a transaction hash.
 // It returns an error if there's an encoding error.
 // If no logs are found for the tx hash, the error is nil.
-func (b *EthermintBackend) GetTransactionLogs(txHash common.Hash) ([]*ethtypes.Log, error) {
+func (b *EVMBackend) GetTransactionLogs(txHash common.Hash) ([]*ethtypes.Log, error) {
 	txRes, err := b.clientCtx.Client.Tx(b.ctx, txHash.Bytes(), false)
 	if err != nil {
 		return nil, err
@@ -183,7 +184,7 @@ func (b *EthermintBackend) GetTransactionLogs(txHash common.Hash) ([]*ethtypes.L
 
 // PendingTransactions returns the transactions that are in the transaction pool
 // and have a from address that is one of the accounts this node manages.
-func (b *EthermintBackend) PendingTransactions() ([]*rpctypes.Transaction, error) {
+func (b *EVMBackend) PendingTransactions() ([]*rpctypes.Transaction, error) {
 	limit := -1
 	pendingTxs, err := b.clientCtx.Client.UnconfirmedTxs(b.ctx, &limit)
 	if err != nil {
@@ -210,7 +211,7 @@ func (b *EthermintBackend) PendingTransactions() ([]*rpctypes.Transaction, error
 	return transactions, nil
 }
 
-func (b *EthermintBackend) PendingTransactionCnt() (int, error) {
+func (b *EVMBackend) PendingTransactionCnt() (int, error) {
 	limit := -1
 	result, err := b.clientCtx.Client.UnconfirmedTxs(b.ctx, &limit)
 	if err != nil {
@@ -219,7 +220,7 @@ func (b *EthermintBackend) PendingTransactionCnt() (int, error) {
 	return result.Count, nil
 }
 
-func (b *EthermintBackend) UserPendingTransactionsCnt(address string) (int, error) {
+func (b *EVMBackend) UserPendingTransactionsCnt(address string) (int, error) {
 	return 0, nil
 	//result, err := b.clientCtx.Client.UserNumUnconfirmedTxs(address)
 	//if err != nil {
@@ -228,7 +229,7 @@ func (b *EthermintBackend) UserPendingTransactionsCnt(address string) (int, erro
 	//return result.Count, nil
 }
 
-func (b *EthermintBackend) UserPendingTransactions(address string, limit int) ([]*rpctypes.Transaction, error) {
+func (b *EVMBackend) UserPendingTransactions(address string, limit int) ([]*rpctypes.Transaction, error) {
 	return nil, nil
 	//result, err := b.clientCtx.Client.UserUnconfirmedTxs(address, limit)
 	//if err != nil {
@@ -257,7 +258,7 @@ func (b *EthermintBackend) UserPendingTransactions(address string, limit int) ([
 
 // PendingTransactions returns the transaction that is in the transaction pool
 // and have a from address that is one of the accounts this node manages.
-func (b *EthermintBackend) PendingTransactionsByHash(target common.Hash) (*rpctypes.Transaction, error) {
+func (b *EVMBackend) PendingTransactionsByHash(target common.Hash) (*rpctypes.Transaction, error) {
 	return nil, nil
 	//pendingTx, err := b.clientCtx.Client.GetUnconfirmedTxByHash(target)
 	//if err != nil {
@@ -276,7 +277,7 @@ func (b *EthermintBackend) PendingTransactionsByHash(target common.Hash) (*rpcty
 }
 
 // GetLogs returns all the logs from all the ethereum transactions in a block.
-func (b *EthermintBackend) GetLogs(blockHash common.Hash) ([][]*ethtypes.Log, error) {
+func (b *EVMBackend) GetLogs(blockHash common.Hash) ([][]*ethtypes.Log, error) {
 	block, err := b.clientCtx.Client.BlockByHash(b.ctx, blockHash.Bytes())
 	if err != nil {
 		return nil, err
@@ -302,13 +303,13 @@ func (b *EthermintBackend) GetLogs(blockHash common.Hash) ([][]*ethtypes.Log, er
 
 // BloomStatus returns the BloomBitsBlocks and the number of processed sections maintained
 // by the chain indexer.
-func (b *EthermintBackend) BloomStatus() (uint64, uint64) {
+func (b *EVMBackend) BloomStatus() (uint64, uint64) {
 	sections := evmtypes.GetIndexer().StoredSection()
 	return evmtypes.BloomBitsBlocks, sections
 }
 
 // LatestBlockNumber gets the latest block height in int64 format.
-func (b *EthermintBackend) LatestBlockNumber() (int64, error) {
+func (b *EVMBackend) LatestBlockNumber() (int64, error) {
 	// NOTE: using 0 as min and max height returns the blockchain info up to the latest block.
 	info, err := b.clientCtx.Client.BlockchainInfo(b.ctx, 0, 0)
 	if err != nil {
@@ -318,7 +319,7 @@ func (b *EthermintBackend) LatestBlockNumber() (int64, error) {
 	return info.LastHeight, nil
 }
 
-func (b *EthermintBackend) ServiceFilter(ctx context.Context, session *bloombits.MatcherSession) {
+func (b *EVMBackend) ServiceFilter(ctx context.Context, session *bloombits.MatcherSession) {
 	for i := 0; i < evmtypes.BloomFilterThreads; i++ {
 		go session.Multiplex(evmtypes.BloomRetrievalBatch, evmtypes.BloomRetrievalWait, b.bloomRequests)
 	}
@@ -326,7 +327,7 @@ func (b *EthermintBackend) ServiceFilter(ctx context.Context, session *bloombits
 
 // startBloomHandlers starts a batch of goroutines to accept bloom bit database
 // retrievals from possibly a range of filters and serving the data to satisfy.
-func (b *EthermintBackend) StartBloomHandlers(sectionSize uint64, db dbm.DB) {
+func (b *EVMBackend) StartBloomHandlers(sectionSize uint64, db dbm.DB) {
 	for i := 0; i < evmtypes.BloomServiceThreads; i++ {
 		go func() {
 			for {
@@ -361,7 +362,7 @@ func (b *EthermintBackend) StartBloomHandlers(sectionSize uint64, db dbm.DB) {
 }
 
 // GetBlockHashByHeight returns the block hash by height.
-func (b *EthermintBackend) GetBlockHashByHeight(height rpctypes.BlockNumber) (common.Hash, error) {
+func (b *EVMBackend) GetBlockHashByHeight(height rpctypes.BlockNumber) (common.Hash, error) {
 	params := &evmtypes.QueryHashRequest{Height: int64(height)}
 	res, err := b.queryClient.HeightToHash(context.Background(), params)
 	if err != nil {
@@ -372,11 +373,11 @@ func (b *EthermintBackend) GetBlockHashByHeight(height rpctypes.BlockNumber) (co
 }
 
 // Close
-func (b *EthermintBackend) Close() {
+func (b *EVMBackend) Close() {
 	close(b.closeBloomHandler)
 }
 
-func (b *EthermintBackend) GetRateLimiter(apiName string) *rate.Limiter {
+func (b *EVMBackend) GetRateLimiter(apiName string) *rate.Limiter {
 	if b.rateLimiters == nil {
 		return nil
 	}

@@ -82,23 +82,23 @@ type stateObject struct {
 
 func newStateObject(db *CommitStateDB, accProto authtypes.AccountI, balance sdk.Int) *stateObject {
 	// func newStateObject(db *CommitStateDB, accProto authexported.Account, balance sdk.Int) *stateObject {
-	ethermintAccount, ok := accProto.(*EthAccount)
+	ethAccount, ok := accProto.(*EthAccount)
 	if !ok {
 		panic(fmt.Sprintf("invalid account type for state object: %T", accProto))
 	}
 
 	// set empty code hash
-	if ethermintAccount.CodeHash == nil {
-		ethermintAccount.CodeHash = emptyCodeHash
+	if ethAccount.CodeHash == nil {
+		ethAccount.CodeHash = emptyCodeHash
 	}
 
 	amt := sdk.NewDecFromBigInt(balance.BigInt()) // int2dec * 10^18
 
 	return &stateObject{
 		stateDB:                 db,
-		account:                 ethermintAccount,
+		account:                 ethAccount,
 		balance:                 amt,
-		address:                 ethermintAccount.EthAddress(),
+		address:                 ethAccount.EthAddress(),
 		originStorage:           Storage{},
 		dirtyStorage:            Storage{},
 		keyToOriginStorageIndex: make(map[ethcmn.Hash]int),

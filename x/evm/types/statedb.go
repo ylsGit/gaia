@@ -723,15 +723,15 @@ func (csdb *CommitStateDB) Reset(_ ethcmn.Hash) error {
 func (csdb *CommitStateDB) UpdateAccounts() {
 	for _, stateEntry := range csdb.stateObjects {
 		currAcc := csdb.accountKeeper.GetAccount(csdb.ctx, sdk.AccAddress(stateEntry.address.Bytes()))
-		ethermintAcc, ok := currAcc.(*EthAccount)
+		ethAcc, ok := currAcc.(*EthAccount)
 		if !ok {
 			continue
 		}
 
-		balance := csdb.bankKeeper.GetBalance(csdb.ctx, ethermintAcc.GetAddress(), csdb.GetParams().EvmDenom)
+		balance := csdb.bankKeeper.GetBalance(csdb.ctx, ethAcc.GetAddress(), csdb.GetParams().EvmDenom)
 		if stateEntry.stateObject.Balance() != sdk.NewDecFromBigInt(balance.Amount.BigInt()).BigInt() && balance.IsValid() ||
-			stateEntry.stateObject.Nonce() != ethermintAcc.GetSequence() {
-			stateEntry.stateObject.account = ethermintAcc
+			stateEntry.stateObject.Nonce() != ethAcc.GetSequence() {
+			stateEntry.stateObject.account = ethAcc
 		}
 	}
 }

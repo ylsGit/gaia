@@ -1061,42 +1061,42 @@ func (api *PublicEthereumAPI) generateFromArgs(args rpctypes.SendTxArgs) (*evmty
 
 // pendingMsgs constructs an array of sdk.Msg. This method will check pending transactions and convert
 // those transactions into ethermint messages.
-func (api *PublicEthereumAPI) pendingMsgs() ([]sdk.Msg, error) {
-	// nolint: prealloc
-	var msgs []sdk.Msg
-
-	pendingTxs, err := api.PendingTransactions()
-	if err != nil {
-		return nil, err
-	}
-
-	for _, pendingTx := range pendingTxs {
-		// NOTE: we have to construct the EVM transaction instead of just casting from the tendermint
-		// transactions because PendingTransactions only checks for MsgEthereumTx messages.
-
-		pendingTo := sdk.AccAddress(pendingTx.To.Bytes())
-		pendingFrom := sdk.AccAddress(pendingTx.From.Bytes())
-		pendingGas, err := hexutil.DecodeUint64(pendingTx.Gas.String())
-		if err != nil {
-			return nil, err
-		}
-
-		pendingValue := pendingTx.Value.ToInt()
-		pendingGasPrice := new(big.Int).SetUint64(evmtypes.DefaultGasPrice)
-		if pendingTx.GasPrice != nil {
-			pendingGasPrice = pendingTx.GasPrice.ToInt()
-		}
-
-		pendingData := pendingTx.Input
-		nonce, _ := api.accountNonce(api.clientCtx, pendingTx.From, true)
-
-		msg := evmtypes.NewMsgEthermint(nonce, &pendingTo, sdk.NewIntFromBigInt(pendingValue), pendingGas,
-			sdk.NewIntFromBigInt(pendingGasPrice), pendingData, pendingFrom)
-
-		msgs = append(msgs, msg)
-	}
-	return msgs, nil
-}
+//func (api *PublicEthereumAPI) pendingMsgs() ([]sdk.Msg, error) {
+//	// nolint: prealloc
+//	var msgs []sdk.Msg
+//
+//	pendingTxs, err := api.PendingTransactions()
+//	if err != nil {
+//		return nil, err
+//	}
+//
+//	for _, pendingTx := range pendingTxs {
+//		// NOTE: we have to construct the EVM transaction instead of just casting from the tendermint
+//		// transactions because PendingTransactions only checks for MsgEthereumTx messages.
+//
+//		pendingTo := sdk.AccAddress(pendingTx.To.Bytes())
+//		pendingFrom := sdk.AccAddress(pendingTx.From.Bytes())
+//		pendingGas, err := hexutil.DecodeUint64(pendingTx.Gas.String())
+//		if err != nil {
+//			return nil, err
+//		}
+//
+//		pendingValue := pendingTx.Value.ToInt()
+//		pendingGasPrice := new(big.Int).SetUint64(evmtypes.DefaultGasPrice)
+//		if pendingTx.GasPrice != nil {
+//			pendingGasPrice = pendingTx.GasPrice.ToInt()
+//		}
+//
+//		pendingData := pendingTx.Input
+//		nonce, _ := api.accountNonce(api.clientCtx, pendingTx.From, true)
+//
+//		msg := evmtypes.NewMsgEthermint(nonce, &pendingTo, sdk.NewIntFromBigInt(pendingValue), pendingGas,
+//			sdk.NewIntFromBigInt(pendingGasPrice), pendingData, pendingFrom)
+//
+//		msgs = append(msgs, msg)
+//	}
+//	return msgs, nil
+//}
 
 // accountNonce returns looks up the transaction nonce count for a given address. If the pending boolean
 // is set to true, it will add to the counter all the uncommitted EVM transactions sent from the address.

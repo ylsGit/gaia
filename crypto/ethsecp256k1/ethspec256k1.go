@@ -20,8 +20,8 @@ var _ cryptotypes.PrivKey = &PrivKey{}
 const (
 	PrivKeySize = 32
 	KeyType     = "eth_secp256k1"
-	PrivKeyName = "ethermint/PrivKeyEthSecp256k1"
-	PubKeyName  = "ethermint/PubKeyEthSecp256k1"
+	PrivKeyName = "ethereum/PrivKeyEthSecp256k1"
+	PubKeyName  = "ethereum/PubKeyEthSecp256k1"
 )
 
 // Bytes returns the byte representation of the Private Key.
