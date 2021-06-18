@@ -2,11 +2,10 @@ package backend
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/cosmos/cosmos-sdk/client"
-	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 	rpctypes "github.com/cosmos/gaia/v4/ethereum/rpc/types"
+	evmtypes "github.com/cosmos/gaia/v4/x/evm/types"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/common/bitutil"
 	"github.com/ethereum/go-ethereum/common/hexutil"
@@ -363,13 +362,13 @@ func (b *EthermintBackend) StartBloomHandlers(sectionSize uint64, db dbm.DB) {
 
 // GetBlockHashByHeight returns the block hash by height.
 func (b *EthermintBackend) GetBlockHashByHeight(height rpctypes.BlockNumber) (common.Hash, error) {
-	res, _, err := b.clientCtx.Query(fmt.Sprintf("custom/%s/%s/%d", evmtypes.ModuleName, evmtypes.QueryHeightToHash, height))
+	params := &evmtypes.QueryHashRequest{Height: int64(height)}
+	res, err := b.queryClient.HeightToHash(context.Background(), params)
 	if err != nil {
 		return common.Hash{}, err
 	}
 
-	hash := common.BytesToHash(res)
-	return hash, nil
+	return common.BytesToHash(res.Hash), nil
 }
 
 // Close

@@ -28,16 +28,14 @@ service Query {
   //        option (google.api.http).get =
   //        "/cosmos/evm/v1beta1/blocks/number/latest";
   //    }
-  //    // HashToHeight queries the block height by a block hash.
-  //    rpc HashToHeight(QueryHeightRequest) returns (QueryHeightResponse) {
-  //        option (google.api.http).get =
-  //        "/cosmos/evm/v1beta1/blocks/number/{hash}";
-  //    }
-  //    // HeightToHash queries the block hash by a block height.
-  //    rpc HeightToHash(QueryHashRequest) returns (QueryHashResponse) {
-  //        option (google.api.http).get =
-  //        "/cosmos/evm/v1beta1/blocks/hash/{height}";
-  //    }
+  // HashToHeight queries the block height by a block hash.
+  rpc HashToHeight(QueryHeightRequest) returns (QueryHeightResponse) {
+    option (google.api.http).get = "/cosmos/evm/v1beta1/blocks/number/{hash}";
+  }
+  // HeightToHash queries the block hash by a block height.
+  rpc HeightToHash(QueryHashRequest) returns (QueryHashResponse) {
+    option (google.api.http).get = "/cosmos/evm/v1beta1/blocks/hash/{height}";
+  }
   // BlockBloom queries the block bloom filter bytes at a given height.
   rpc BlockBloom(QueryBlockBloomRequest) returns (QueryBlockBloomResponse) {
     option (google.api.http).get = "/cosmos/evm/v1beta1/bloom/{height}";
@@ -134,21 +132,13 @@ message QueryBlockBloomResponse {
   bytes bloom = 1;
 }
 
-// message QueryHeightRequest {
-//    sint64 height = 1;
-//}
-//
-// message QueryHeightReponse {
-//    bytes hash = 1;
-//}
-//
-// message QueryHashRequest {
-//    string hash = 1;
-//}
-//
-// message QueryHashResponse {
-//    sint64 height = 1;
-//}
+message QueryHeightRequest { bytes hash = 1; }
+
+message QueryHeightResponse { sint64 height = 1; }
+
+message QueryHashRequest { sint64 height = 1; }
+
+message QueryHashResponse { bytes hash = 1; }
 
 // QueryAccountRequest is the request type for the Query/Account RPC method.
 message QueryAccountRequest {

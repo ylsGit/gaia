@@ -75,13 +75,35 @@ func (k Keeper) BlockNumber(context.Context, *types.QueryParamsRequest) (*types.
 }
 
 //
-func (k Keeper) HashToHeight(context.Context, *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
-	return nil, nil
+func (k Keeper) HashToHeight(c context.Context, req *types.QueryHeightRequest) (*types.QueryHeightResponse, error) {
+	if req == nil {
+		return nil, status.Errorf(codes.InvalidArgument, "empty request")
+	}
+
+	if len(req.Hash) == 0 {
+		return nil, status.Errorf(codes.InvalidArgument, "invalid request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+	blockNumber, found := k.GetBlockHash(ctx, req.Hash)
+	if !found {
+		return nil, status.Errorf(codes.NotFound, "Block height not found for hash %s", ethcmn.BytesToHash(req.Hash))
+	}
+
+	return &types.QueryHeightResponse{Height: blockNumber}, nil
+
 }
 
 //
-func (k Keeper) HeightToHash(context.Context, *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
-	return nil, nil
+func (k Keeper) HeightToHash(c context.Context, req *types.QueryHashRequest) (*types.QueryHashResponse, error) {
+	if req == nil {
+		return nil, status.Errorf(codes.InvalidArgument, "empty request")
+	}
+
+	ctx := sdk.UnwrapSDKContext(c)
+	hash := k.GetHeightHash(ctx, uint64(req.Height))
+
+	return &types.QueryHashResponse{Hash: hash.Bytes()}, nil
 }
 
 // BlockBloom implements the Query/BlockBloom gRPC method
