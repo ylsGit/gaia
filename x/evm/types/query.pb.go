@@ -315,22 +315,22 @@ func (m *QueryCodeResponse) GetCode() []byte {
 	return nil
 }
 
-// QueryBlockNumberRequest
-type QueryBlockNumberRequest struct {
+// QuerySectionRequest
+type QuerySectionRequest struct {
 }
 
-func (m *QueryBlockNumberRequest) Reset()         { *m = QueryBlockNumberRequest{} }
-func (m *QueryBlockNumberRequest) String() string { return proto.CompactTextString(m) }
-func (*QueryBlockNumberRequest) ProtoMessage()    {}
-func (*QueryBlockNumberRequest) Descriptor() ([]byte, []int) {
+func (m *QuerySectionRequest) Reset()         { *m = QuerySectionRequest{} }
+func (m *QuerySectionRequest) String() string { return proto.CompactTextString(m) }
+func (*QuerySectionRequest) ProtoMessage()    {}
+func (*QuerySectionRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_649c519a6c6bde24, []int{6}
 }
-func (m *QueryBlockNumberRequest) XXX_Unmarshal(b []byte) error {
+func (m *QuerySectionRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *QueryBlockNumberRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *QuerySectionRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_QueryBlockNumberRequest.Marshal(b, m, deterministic)
+		return xxx_messageInfo_QuerySectionRequest.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -340,17 +340,62 @@ func (m *QueryBlockNumberRequest) XXX_Marshal(b []byte, deterministic bool) ([]b
 		return b[:n], nil
 	}
 }
-func (m *QueryBlockNumberRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_QueryBlockNumberRequest.Merge(m, src)
+func (m *QuerySectionRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QuerySectionRequest.Merge(m, src)
 }
-func (m *QueryBlockNumberRequest) XXX_Size() int {
+func (m *QuerySectionRequest) XXX_Size() int {
 	return m.Size()
 }
-func (m *QueryBlockNumberRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_QueryBlockNumberRequest.DiscardUnknown(m)
+func (m *QuerySectionRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_QuerySectionRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_QueryBlockNumberRequest proto.InternalMessageInfo
+var xxx_messageInfo_QuerySectionRequest proto.InternalMessageInfo
+
+// QuerySectionResponse
+type QuerySectionResponse struct {
+	Section uint64 `protobuf:"varint,1,opt,name=section,proto3" json:"section,omitempty"`
+}
+
+func (m *QuerySectionResponse) Reset()         { *m = QuerySectionResponse{} }
+func (m *QuerySectionResponse) String() string { return proto.CompactTextString(m) }
+func (*QuerySectionResponse) ProtoMessage()    {}
+func (*QuerySectionResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_649c519a6c6bde24, []int{7}
+}
+func (m *QuerySectionResponse) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *QuerySectionResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_QuerySectionResponse.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *QuerySectionResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_QuerySectionResponse.Merge(m, src)
+}
+func (m *QuerySectionResponse) XXX_Size() int {
+	return m.Size()
+}
+func (m *QuerySectionResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_QuerySectionResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_QuerySectionResponse proto.InternalMessageInfo
+
+func (m *QuerySectionResponse) GetSection() uint64 {
+	if m != nil {
+		return m.Section
+	}
+	return 0
+}
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
 type QueryParamsRequest struct {
@@ -360,7 +405,7 @@ func (m *QueryParamsRequest) Reset()         { *m = QueryParamsRequest{} }
 func (m *QueryParamsRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryParamsRequest) ProtoMessage()    {}
 func (*QueryParamsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_649c519a6c6bde24, []int{7}
+	return fileDescriptor_649c519a6c6bde24, []int{8}
 }
 func (m *QueryParamsRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -399,7 +444,7 @@ func (m *QueryParamsResponse) Reset()         { *m = QueryParamsResponse{} }
 func (m *QueryParamsResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryParamsResponse) ProtoMessage()    {}
 func (*QueryParamsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_649c519a6c6bde24, []int{8}
+	return fileDescriptor_649c519a6c6bde24, []int{9}
 }
 func (m *QueryParamsResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -445,7 +490,7 @@ func (m *QueryBlockBloomRequest) Reset()         { *m = QueryBlockBloomRequest{}
 func (m *QueryBlockBloomRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryBlockBloomRequest) ProtoMessage()    {}
 func (*QueryBlockBloomRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_649c519a6c6bde24, []int{9}
+	return fileDescriptor_649c519a6c6bde24, []int{10}
 }
 func (m *QueryBlockBloomRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -492,7 +537,7 @@ func (m *QueryBlockBloomResponse) Reset()         { *m = QueryBlockBloomResponse
 func (m *QueryBlockBloomResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryBlockBloomResponse) ProtoMessage()    {}
 func (*QueryBlockBloomResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_649c519a6c6bde24, []int{10}
+	return fileDescriptor_649c519a6c6bde24, []int{11}
 }
 func (m *QueryBlockBloomResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -536,7 +581,7 @@ func (m *QueryHeightRequest) Reset()         { *m = QueryHeightRequest{} }
 func (m *QueryHeightRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryHeightRequest) ProtoMessage()    {}
 func (*QueryHeightRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_649c519a6c6bde24, []int{11}
+	return fileDescriptor_649c519a6c6bde24, []int{12}
 }
 func (m *QueryHeightRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -580,7 +625,7 @@ func (m *QueryHeightResponse) Reset()         { *m = QueryHeightResponse{} }
 func (m *QueryHeightResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryHeightResponse) ProtoMessage()    {}
 func (*QueryHeightResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_649c519a6c6bde24, []int{12}
+	return fileDescriptor_649c519a6c6bde24, []int{13}
 }
 func (m *QueryHeightResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -624,7 +669,7 @@ func (m *QueryHashRequest) Reset()         { *m = QueryHashRequest{} }
 func (m *QueryHashRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryHashRequest) ProtoMessage()    {}
 func (*QueryHashRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_649c519a6c6bde24, []int{13}
+	return fileDescriptor_649c519a6c6bde24, []int{14}
 }
 func (m *QueryHashRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -668,7 +713,7 @@ func (m *QueryHashResponse) Reset()         { *m = QueryHashResponse{} }
 func (m *QueryHashResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryHashResponse) ProtoMessage()    {}
 func (*QueryHashResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_649c519a6c6bde24, []int{14}
+	return fileDescriptor_649c519a6c6bde24, []int{15}
 }
 func (m *QueryHashResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -714,7 +759,7 @@ func (m *QueryAccountRequest) Reset()         { *m = QueryAccountRequest{} }
 func (m *QueryAccountRequest) String() string { return proto.CompactTextString(m) }
 func (*QueryAccountRequest) ProtoMessage()    {}
 func (*QueryAccountRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_649c519a6c6bde24, []int{15}
+	return fileDescriptor_649c519a6c6bde24, []int{16}
 }
 func (m *QueryAccountRequest) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -757,7 +802,7 @@ func (m *QueryAccountResponse) Reset()         { *m = QueryAccountResponse{} }
 func (m *QueryAccountResponse) String() string { return proto.CompactTextString(m) }
 func (*QueryAccountResponse) ProtoMessage()    {}
 func (*QueryAccountResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_649c519a6c6bde24, []int{16}
+	return fileDescriptor_649c519a6c6bde24, []int{17}
 }
 func (m *QueryAccountResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -814,7 +859,8 @@ func init() {
 	proto.RegisterType((*QueryStorageResponse)(nil), "gaia.evm.v1beta1.QueryStorageResponse")
 	proto.RegisterType((*QueryCodeRequest)(nil), "gaia.evm.v1beta1.QueryCodeRequest")
 	proto.RegisterType((*QueryCodeResponse)(nil), "gaia.evm.v1beta1.QueryCodeResponse")
-	proto.RegisterType((*QueryBlockNumberRequest)(nil), "gaia.evm.v1beta1.QueryBlockNumberRequest")
+	proto.RegisterType((*QuerySectionRequest)(nil), "gaia.evm.v1beta1.QuerySectionRequest")
+	proto.RegisterType((*QuerySectionResponse)(nil), "gaia.evm.v1beta1.QuerySectionResponse")
 	proto.RegisterType((*QueryParamsRequest)(nil), "gaia.evm.v1beta1.QueryParamsRequest")
 	proto.RegisterType((*QueryParamsResponse)(nil), "gaia.evm.v1beta1.QueryParamsResponse")
 	proto.RegisterType((*QueryBlockBloomRequest)(nil), "gaia.evm.v1beta1.QueryBlockBloomRequest")
@@ -830,57 +876,57 @@ func init() {
 func init() { proto.RegisterFile("gaia/evm/v1beta1/query.proto", fileDescriptor_649c519a6c6bde24) }
 
 var fileDescriptor_649c519a6c6bde24 = []byte{
-	// 790 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x95, 0x4b, 0x6f, 0x13, 0x3b,
-	0x14, 0x80, 0x33, 0x6d, 0x9a, 0xb4, 0xbe, 0x5d, 0xf4, 0xfa, 0x46, 0xbd, 0x61, 0xa8, 0xd2, 0xca,
-	0xf4, 0x11, 0x42, 0x1b, 0xf7, 0x21, 0x21, 0x81, 0xd8, 0x34, 0x6c, 0xba, 0x01, 0x41, 0xe8, 0x8a,
-	0x0d, 0x72, 0x26, 0xd6, 0x24, 0x6a, 0x66, 0x9c, 0xc6, 0x93, 0x88, 0x28, 0xea, 0x86, 0x0d, 0x65,
-	0x81, 0x84, 0xc4, 0x1f, 0xe8, 0xcf, 0xe9, 0xb2, 0x12, 0x1b, 0x56, 0x08, 0xb5, 0x2c, 0xf8, 0x19,
-	0xc8, 0xf6, 0x99, 0x66, 0x26, 0xcd, 0x90, 0xec, 0xec, 0xe3, 0xf3, 0xf8, 0x7c, 0x1e, 0x36, 0x5a,
-	0x71, 0x59, 0x93, 0x51, 0xde, 0xf3, 0x68, 0x6f, 0xaf, 0xc6, 0x03, 0xb6, 0x47, 0x4f, 0xbb, 0xbc,
-	0xd3, 0x2f, 0xb7, 0x3b, 0x22, 0x10, 0x78, 0x49, 0x9d, 0x96, 0x79, 0xcf, 0x2b, 0xc3, 0xa9, 0x5d,
-	0x72, 0x84, 0xf4, 0x84, 0xa4, 0x35, 0x26, 0xb9, 0x51, 0xbd, 0x35, 0x6c, 0x33, 0xb7, 0xe9, 0xb3,
-	0xa0, 0x29, 0x7c, 0x63, 0x6d, 0xe7, 0x5c, 0xe1, 0x0a, 0xbd, 0xa4, 0x6a, 0x05, 0xd2, 0x15, 0x57,
-	0x08, 0xb7, 0xc5, 0x29, 0x6b, 0x37, 0x29, 0xf3, 0x7d, 0x11, 0x68, 0x13, 0x09, 0xa7, 0xf6, 0x1d,
-	0x1e, 0x15, 0x5d, 0x9f, 0x11, 0x8a, 0xfe, 0x7b, 0xad, 0x22, 0x56, 0x58, 0x8b, 0xf9, 0x0e, 0xaf,
-	0xf2, 0xd3, 0x2e, 0x97, 0x01, 0xce, 0xa3, 0x2c, 0xab, 0xd7, 0x3b, 0x5c, 0xca, 0xbc, 0xb5, 0x66,
-	0x15, 0x17, 0xaa, 0xe1, 0x96, 0xec, 0xa2, 0x5c, 0xdc, 0x40, 0xb6, 0x85, 0x2f, 0xb9, 0xb2, 0xa8,
-	0x19, 0x51, 0x68, 0x01, 0x5b, 0x72, 0x08, 0x21, 0xde, 0x04, 0xa2, 0xc3, 0xdc, 0xc9, 0x21, 0xf0,
-	0x12, 0x9a, 0x3d, 0xe1, 0xfd, 0xfc, 0x8c, 0x96, 0xaa, 0x25, 0xd9, 0x86, 0xa0, 0xb7, 0x2e, 0x20,
-	0x68, 0x0e, 0xcd, 0xf5, 0x58, 0xab, 0x6b, 0x42, 0x2e, 0x56, 0xcd, 0x86, 0x6c, 0xa3, 0x25, 0xad,
-	0xfd, 0x5c, 0xd4, 0xa7, 0xb8, 0xd0, 0x16, 0xfa, 0x37, 0xa2, 0x0d, 0x8e, 0x31, 0x4a, 0x3b, 0xa2,
-	0x1e, 0xfa, 0xd5, 0x6b, 0x72, 0x0f, 0xfd, 0x6f, 0x6e, 0xde, 0x12, 0xce, 0xc9, 0xcb, 0xae, 0x57,
-	0xe3, 0x1d, 0xf0, 0x4e, 0x72, 0x08, 0xeb, 0xa3, 0x57, 0xac, 0xc3, 0x3c, 0x19, 0x4a, 0x5f, 0xc0,
-	0xc5, 0x43, 0x29, 0xf8, 0x7e, 0x8c, 0x32, 0x6d, 0x2d, 0xd1, 0xde, 0xff, 0xd9, 0xcf, 0x97, 0x47,
-	0x3b, 0xa2, 0x6c, 0x2c, 0x2a, 0xe9, 0xcb, 0x1f, 0xab, 0xa9, 0x2a, 0x68, 0x93, 0x5d, 0xb4, 0x3c,
-	0x8c, 0x5f, 0x69, 0x09, 0xe1, 0x85, 0x97, 0x5b, 0x46, 0x99, 0x06, 0x6f, 0xba, 0x8d, 0x40, 0x7b,
-	0xc4, 0x55, 0xd8, 0x11, 0x1a, 0x25, 0x06, 0x8b, 0x61, 0xe6, 0x6a, 0x4a, 0x10, 0x66, 0x4e, 0x6f,
-	0x48, 0x11, 0xee, 0x71, 0xa4, 0xed, 0x43, 0xf7, 0x18, 0xa5, 0x1b, 0x4c, 0x36, 0xc2, 0x64, 0xa8,
-	0x35, 0xd9, 0x81, 0xbb, 0x85, 0x9a, 0xe0, 0x36, 0x89, 0xa4, 0x04, 0x25, 0x39, 0x62, 0xb2, 0x31,
-	0x89, 0x3a, 0x2c, 0x88, 0xd1, 0x1d, 0x16, 0xe4, 0x0e, 0xc3, 0x13, 0x60, 0x38, 0x74, 0x1c, 0xd1,
-	0xf5, 0x83, 0x89, 0xa5, 0x7e, 0x3a, 0x7f, 0x7e, 0xb1, 0x9a, 0xfa, 0x7d, 0xb1, 0x9a, 0x22, 0x0e,
-	0x34, 0xd4, 0xad, 0xe9, 0xa4, 0x2e, 0xc6, 0xf7, 0xd1, 0x82, 0xea, 0x82, 0x77, 0x9a, 0x62, 0x46,
-	0x53, 0xcc, 0x2b, 0x81, 0xa2, 0x54, 0xd9, 0xf4, 0x85, 0x32, 0x9a, 0x5d, 0xb3, 0x8a, 0xe9, 0xaa,
-	0xd9, 0xec, 0x5f, 0xcd, 0xa3, 0x39, 0x1d, 0x05, 0x9f, 0x5b, 0x28, 0x0b, 0x03, 0x83, 0x37, 0xee,
-	0x96, 0x7b, 0xcc, 0x04, 0xda, 0x9b, 0x93, 0xd4, 0x0c, 0x31, 0x29, 0x7f, 0xf8, 0xf6, 0xeb, 0xeb,
-	0x4c, 0x11, 0x6f, 0x52, 0x78, 0x45, 0xa2, 0x73, 0x0e, 0xf0, 0x92, 0x0e, 0x20, 0x05, 0x67, 0xf8,
-	0xb3, 0x85, 0xb2, 0x30, 0x46, 0x89, 0x28, 0xf1, 0x49, 0x4d, 0x44, 0x19, 0x99, 0x46, 0x72, 0xa0,
-	0x51, 0x76, 0xf0, 0xa3, 0x71, 0x28, 0xd2, 0x28, 0x0f, 0x49, 0xe8, 0xe0, 0x84, 0xf7, 0xcf, 0xf0,
-	0x00, 0xa5, 0xd5, 0xe4, 0x61, 0x92, 0x10, 0x24, 0x32, 0xc4, 0xf6, 0x83, 0xbf, 0xea, 0x00, 0x45,
-	0x49, 0x53, 0xac, 0x63, 0x32, 0x8e, 0x42, 0x55, 0x2c, 0x9e, 0x8c, 0x45, 0x55, 0xc0, 0x63, 0x61,
-	0xfa, 0x18, 0xaf, 0x27, 0x44, 0x88, 0x0d, 0x84, 0xbd, 0x31, 0x41, 0x0b, 0x48, 0x76, 0x35, 0x49,
-	0x09, 0x17, 0xc7, 0x96, 0x46, 0xcd, 0xa4, 0xa4, 0xbe, 0x7e, 0x47, 0xe8, 0x40, 0xb5, 0xd5, 0x19,
-	0xfe, 0xa4, 0x78, 0xb4, 0x93, 0x63, 0xa1, 0x1b, 0x2b, 0x29, 0x2b, 0x91, 0x39, 0x4a, 0xcc, 0x4a,
-	0x74, 0x7e, 0xa6, 0x62, 0x51, 0x0c, 0x74, 0x60, 0xa6, 0x50, 0xe7, 0x06, 0x0d, 0x1f, 0x0e, 0x5c,
-	0x4c, 0xea, 0xc7, 0xd1, 0xd7, 0xc8, 0x7e, 0x38, 0x85, 0xe6, 0x34, 0xb5, 0xd2, 0x4f, 0xd2, 0x90,
-	0xe7, 0xa3, 0x85, 0xb2, 0x30, 0xae, 0x89, 0x8d, 0x1b, 0x7f, 0x09, 0x12, 0x1b, 0x77, 0x64, 0xea,
-	0xc9, 0x8e, 0xc6, 0xd8, 0xc2, 0x1b, 0xe3, 0x30, 0x98, 0x51, 0x8e, 0x74, 0x4d, 0x1f, 0x65, 0xcc,
-	0x03, 0x9d, 0xd8, 0x2e, 0xb1, 0x7f, 0x20, 0xb1, 0x5d, 0xe2, 0xff, 0x02, 0x21, 0x9a, 0x62, 0x05,
-	0xdb, 0xe3, 0x28, 0xcc, 0x1f, 0x50, 0x79, 0x76, 0x79, 0x5d, 0xb0, 0xae, 0xae, 0x0b, 0xd6, 0xcf,
-	0xeb, 0x82, 0xf5, 0xe5, 0xa6, 0x90, 0xba, 0xba, 0x29, 0xa4, 0xbe, 0xdf, 0x14, 0x52, 0x6f, 0x89,
-	0xdb, 0x0c, 0x1a, 0xdd, 0x5a, 0xd9, 0x11, 0x5e, 0x68, 0xaf, 0xbf, 0xfd, 0xf7, 0xda, 0x4d, 0xd0,
-	0x6f, 0x73, 0x59, 0xcb, 0xe8, 0x3f, 0xff, 0xe0, 0x4f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x6c, 0x59,
-	0xc9, 0x86, 0xa1, 0x08, 0x00, 0x00,
+	// 797 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x56, 0x3d, 0x6f, 0x13, 0x4d,
+	0x10, 0xf6, 0x25, 0x8e, 0x9d, 0xec, 0x9b, 0x22, 0xef, 0x62, 0x82, 0x75, 0x09, 0x0e, 0xda, 0x7c,
+	0x19, 0x93, 0xf8, 0xf2, 0x21, 0x21, 0x81, 0x68, 0x62, 0x9a, 0x34, 0x48, 0x60, 0xa8, 0x68, 0xd0,
+	0xfa, 0xbc, 0x3a, 0x5b, 0xb1, 0x6f, 0x1d, 0xef, 0xd9, 0xc2, 0xb2, 0xd2, 0xd0, 0x10, 0x0a, 0x24,
+	0x24, 0xfe, 0x40, 0xfe, 0x09, 0x6d, 0xca, 0x48, 0x34, 0x54, 0x08, 0x25, 0x14, 0xfc, 0x0c, 0xb4,
+	0xb3, 0x73, 0xfe, 0x3e, 0x9c, 0x6e, 0x77, 0x76, 0xe6, 0x99, 0x67, 0x67, 0xe6, 0xd9, 0x3b, 0xb2,
+	0xea, 0xf1, 0x2a, 0x77, 0x44, 0xbb, 0xee, 0xb4, 0xf7, 0x4b, 0x22, 0xe0, 0xfb, 0xce, 0x69, 0x4b,
+	0x34, 0x3b, 0xf9, 0x46, 0x53, 0x06, 0x92, 0x2e, 0xe9, 0xd3, 0xbc, 0x68, 0xd7, 0xf3, 0x78, 0x6a,
+	0xe7, 0x5c, 0xa9, 0xea, 0x52, 0x39, 0x25, 0xae, 0x84, 0x71, 0xed, 0x05, 0x36, 0xb8, 0x57, 0xf5,
+	0x79, 0x50, 0x95, 0xbe, 0x89, 0xb6, 0x53, 0x9e, 0xf4, 0x24, 0x2c, 0x1d, 0xbd, 0x42, 0xeb, 0xaa,
+	0x27, 0xa5, 0x57, 0x13, 0x0e, 0x6f, 0x54, 0x1d, 0xee, 0xfb, 0x32, 0x80, 0x10, 0x85, 0xa7, 0xf6,
+	0x18, 0x1f, 0x9d, 0x1d, 0xce, 0x98, 0x43, 0xee, 0xbc, 0xd2, 0x19, 0x0b, 0xbc, 0xc6, 0x7d, 0x57,
+	0x14, 0xc5, 0x69, 0x4b, 0xa8, 0x80, 0xa6, 0x49, 0x92, 0x97, 0xcb, 0x4d, 0xa1, 0x54, 0xda, 0x7a,
+	0x60, 0x65, 0x17, 0x8a, 0xe1, 0x96, 0xed, 0x91, 0xd4, 0x70, 0x80, 0x6a, 0x48, 0x5f, 0x09, 0x1d,
+	0x51, 0x32, 0xa6, 0x30, 0x02, 0xb7, 0xec, 0x08, 0x53, 0xbc, 0x0e, 0x64, 0x93, 0x7b, 0xd3, 0x53,
+	0xd0, 0x25, 0x32, 0x7b, 0x22, 0x3a, 0xe9, 0x19, 0xb0, 0xea, 0x25, 0xdb, 0xc1, 0xa4, 0x3d, 0x08,
+	0x4c, 0x9a, 0x22, 0x73, 0x6d, 0x5e, 0x6b, 0x99, 0x94, 0x8b, 0x45, 0xb3, 0x61, 0x3b, 0x64, 0x09,
+	0xbc, 0x9f, 0xcb, 0xf2, 0x2d, 0x2e, 0xb4, 0x4d, 0xfe, 0x1f, 0xf0, 0x46, 0x60, 0x4a, 0xe2, 0xae,
+	0x2c, 0x87, 0xb8, 0xb0, 0x66, 0x77, 0xc3, 0x7b, 0x08, 0x57, 0x57, 0x17, 0x91, 0x7b, 0x05, 0xe9,
+	0x99, 0xfb, 0x05, 0x51, 0xc6, 0x04, 0x28, 0xf1, 0x62, 0xb8, 0x65, 0x29, 0x42, 0x21, 0xe2, 0x25,
+	0x6f, 0xf2, 0xba, 0x0a, 0x71, 0x5e, 0x20, 0x7c, 0x68, 0x45, 0x98, 0xc7, 0x24, 0xd1, 0x00, 0x0b,
+	0xa0, 0xfc, 0x77, 0x90, 0xce, 0x8f, 0xce, 0x4f, 0xde, 0x44, 0x14, 0xe2, 0x97, 0x3f, 0xd7, 0x62,
+	0x45, 0xf4, 0x66, 0x7b, 0x64, 0xd9, 0xf4, 0xa9, 0x26, 0xdd, 0x93, 0x42, 0x4d, 0xca, 0x7a, 0x58,
+	0x8a, 0x65, 0x92, 0xa8, 0x88, 0xaa, 0x57, 0x09, 0x00, 0x91, 0x16, 0x71, 0xc7, 0x1c, 0x72, 0x6f,
+	0x2c, 0xa2, 0x5f, 0xe7, 0x92, 0x36, 0x84, 0x75, 0x86, 0x0d, 0xcb, 0xe2, 0x3d, 0x8e, 0x21, 0x3e,
+	0x84, 0xa7, 0x24, 0x5e, 0xe1, 0xaa, 0x12, 0x96, 0x4e, 0xaf, 0xd9, 0x2e, 0xde, 0x2d, 0xf4, 0x44,
+	0xd8, 0x28, 0x26, 0x39, 0x6c, 0xe0, 0x31, 0x57, 0x95, 0x69, 0xac, 0xc3, 0xf6, 0x19, 0xdf, 0x7e,
+	0xfb, 0xc6, 0x38, 0x3c, 0x41, 0x0e, 0x47, 0xae, 0x2b, 0x5b, 0x7e, 0x30, 0x75, 0x30, 0x9e, 0xce,
+	0x9f, 0x5f, 0xac, 0xc5, 0xfe, 0x5c, 0xac, 0xc5, 0x98, 0x8b, 0x2d, 0xee, 0x85, 0x4e, 0x9b, 0x79,
+	0xba, 0x42, 0x16, 0xf4, 0xcc, 0xbc, 0x03, 0x16, 0x33, 0xc0, 0x62, 0x5e, 0x1b, 0x34, 0x4b, 0x5d,
+	0x4d, 0x5f, 0xea, 0xa0, 0x59, 0x98, 0x0b, 0xb3, 0x39, 0xf8, 0x36, 0x4f, 0xe6, 0x20, 0x0b, 0x3d,
+	0xb7, 0x48, 0x12, 0xe5, 0x45, 0x37, 0xc7, 0xdb, 0x3d, 0x41, 0xaf, 0xf6, 0xd6, 0x34, 0x37, 0xc3,
+	0x98, 0xe5, 0x3f, 0x7c, 0xff, 0xfd, 0x75, 0x26, 0x4b, 0xb7, 0x1c, 0x7c, 0x73, 0x06, 0x5f, 0x05,
+	0x24, 0xaf, 0x9c, 0x2e, 0x96, 0xe0, 0x8c, 0x7e, 0xb6, 0x48, 0x12, 0x45, 0x17, 0x49, 0x65, 0x58,
+	0xd7, 0x91, 0x54, 0x46, 0xb4, 0xcb, 0x0e, 0x81, 0xca, 0x2e, 0x7d, 0x34, 0x89, 0x8a, 0x32, 0xce,
+	0x7d, 0x26, 0x4e, 0xf7, 0x44, 0x74, 0xce, 0x68, 0x97, 0xc4, 0xb5, 0x4e, 0x29, 0x8b, 0x48, 0x32,
+	0x20, 0x79, 0x7b, 0xfd, 0x9f, 0x3e, 0xc8, 0x22, 0x07, 0x2c, 0x36, 0x28, 0x9b, 0xc4, 0x42, 0x77,
+	0x6c, 0xa0, 0x18, 0x9f, 0x2c, 0xb2, 0x68, 0x26, 0xf8, 0x8d, 0x84, 0x46, 0x46, 0xb1, 0x18, 0x98,
+	0xdb, 0x48, 0x16, 0x83, 0xf3, 0xca, 0xf6, 0x80, 0x45, 0x8e, 0x66, 0x27, 0xb6, 0x45, 0xeb, 0x51,
+	0x39, 0x7a, 0x94, 0x9c, 0xae, 0x99, 0x7a, 0x68, 0x0c, 0xe9, 0x0b, 0x95, 0x66, 0xa3, 0xfa, 0x3f,
+	0xaa, 0x7e, 0xfb, 0xe1, 0x2d, 0x3c, 0x6f, 0x53, 0x1b, 0x78, 0x02, 0xfa, 0x7c, 0x3e, 0x5a, 0x24,
+	0x89, 0xf2, 0x88, 0x1c, 0x94, 0x61, 0xe5, 0x45, 0x0e, 0xca, 0x88, 0xca, 0xd8, 0x2e, 0xd0, 0xd8,
+	0xa6, 0x9b, 0x93, 0x68, 0x70, 0xe3, 0x3c, 0xd0, 0xa5, 0x0e, 0x49, 0x98, 0x07, 0x91, 0x6e, 0x44,
+	0x24, 0x18, 0x7a, 0x77, 0xed, 0xcd, 0x29, 0x5e, 0xc8, 0x82, 0x01, 0x8b, 0x55, 0x6a, 0x4f, 0x62,
+	0x61, 0xde, 0x5c, 0x7a, 0x46, 0x92, 0xf8, 0x15, 0x88, 0x16, 0xcb, 0xd0, 0xc7, 0x23, 0x5a, 0x2c,
+	0xc3, 0x1f, 0x13, 0xb6, 0x0e, 0xd9, 0xef, 0xd3, 0x95, 0x89, 0x62, 0x31, 0xce, 0x85, 0x67, 0x97,
+	0xd7, 0x19, 0xeb, 0xea, 0x3a, 0x63, 0xfd, 0xba, 0xce, 0x58, 0x5f, 0x6e, 0x32, 0xb1, 0xab, 0x9b,
+	0x4c, 0xec, 0xc7, 0x4d, 0x26, 0xf6, 0x96, 0x79, 0xd5, 0xa0, 0xd2, 0x2a, 0xe5, 0x5d, 0x59, 0x0f,
+	0x01, 0xe0, 0x9f, 0xe0, 0x3d, 0xe0, 0x04, 0x9d, 0x86, 0x50, 0xa5, 0x04, 0xfc, 0x10, 0x1c, 0xfe,
+	0x0d, 0x00, 0x00, 0xff, 0xff, 0x20, 0x0b, 0x87, 0x43, 0xbe, 0x08, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -901,26 +947,16 @@ type QueryClient interface {
 	Storage(ctx context.Context, in *QueryStorageRequest, opts ...grpc.CallOption) (*QueryStorageResponse, error)
 	// Code queries the code for a contract account.
 	Code(ctx context.Context, in *QueryCodeRequest, opts ...grpc.CallOption) (*QueryCodeResponse, error)
-	//
-	//    rpc BlockNumber(QueryBlockNumberRequest) returns (QueryParamsResponse) {
-	//        option (google.api.http).get =
-	//        "/cosmos/evm/v1beta1/blocks/number/latest";
-	//    }
-	// HashToHeight queries the block height by a block hash.
-	HashToHeight(ctx context.Context, in *QueryHeightRequest, opts ...grpc.CallOption) (*QueryHeightResponse, error)
 	// HeightToHash queries the block hash by a block height.
 	HeightToHash(ctx context.Context, in *QueryHashRequest, opts ...grpc.CallOption) (*QueryHashResponse, error)
 	// BlockBloom queries the block bloom filter bytes at a given height.
 	BlockBloom(ctx context.Context, in *QueryBlockBloomRequest, opts ...grpc.CallOption) (*QueryBlockBloomResponse, error)
 	// Account queries an Ethereum account.
 	Account(ctx context.Context, in *QueryAccountRequest, opts ...grpc.CallOption) (*QueryAccountResponse, error)
-	//    //
-	//    rpc ExportAccount(QueryParamsRequest) returns (QueryParamsResponse) {
-	//        option (google.api.http).get =
-	//        "/cosmos/evm/v1beta1/account/export/{address}";
-	//    }
 	// Params queries the parameters of x/evm module.
 	Params(ctx context.Context, in *QueryParamsRequest, opts ...grpc.CallOption) (*QueryParamsResponse, error)
+	// Section queries the parameters of x/evm module.
+	Section(ctx context.Context, in *QuerySectionRequest, opts ...grpc.CallOption) (*QuerySectionResponse, error)
 }
 
 type queryClient struct {
@@ -952,15 +988,6 @@ func (c *queryClient) Storage(ctx context.Context, in *QueryStorageRequest, opts
 func (c *queryClient) Code(ctx context.Context, in *QueryCodeRequest, opts ...grpc.CallOption) (*QueryCodeResponse, error) {
 	out := new(QueryCodeResponse)
 	err := c.cc.Invoke(ctx, "/gaia.evm.v1beta1.Query/Code", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *queryClient) HashToHeight(ctx context.Context, in *QueryHeightRequest, opts ...grpc.CallOption) (*QueryHeightResponse, error) {
-	out := new(QueryHeightResponse)
-	err := c.cc.Invoke(ctx, "/gaia.evm.v1beta1.Query/HashToHeight", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1003,6 +1030,15 @@ func (c *queryClient) Params(ctx context.Context, in *QueryParamsRequest, opts .
 	return out, nil
 }
 
+func (c *queryClient) Section(ctx context.Context, in *QuerySectionRequest, opts ...grpc.CallOption) (*QuerySectionResponse, error) {
+	out := new(QuerySectionResponse)
+	err := c.cc.Invoke(ctx, "/gaia.evm.v1beta1.Query/Section", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // QueryServer is the server API for Query service.
 type QueryServer interface {
 	// Balance queries the balance of all coins for a single account.
@@ -1011,26 +1047,16 @@ type QueryServer interface {
 	Storage(context.Context, *QueryStorageRequest) (*QueryStorageResponse, error)
 	// Code queries the code for a contract account.
 	Code(context.Context, *QueryCodeRequest) (*QueryCodeResponse, error)
-	//
-	//    rpc BlockNumber(QueryBlockNumberRequest) returns (QueryParamsResponse) {
-	//        option (google.api.http).get =
-	//        "/cosmos/evm/v1beta1/blocks/number/latest";
-	//    }
-	// HashToHeight queries the block height by a block hash.
-	HashToHeight(context.Context, *QueryHeightRequest) (*QueryHeightResponse, error)
 	// HeightToHash queries the block hash by a block height.
 	HeightToHash(context.Context, *QueryHashRequest) (*QueryHashResponse, error)
 	// BlockBloom queries the block bloom filter bytes at a given height.
 	BlockBloom(context.Context, *QueryBlockBloomRequest) (*QueryBlockBloomResponse, error)
 	// Account queries an Ethereum account.
 	Account(context.Context, *QueryAccountRequest) (*QueryAccountResponse, error)
-	//    //
-	//    rpc ExportAccount(QueryParamsRequest) returns (QueryParamsResponse) {
-	//        option (google.api.http).get =
-	//        "/cosmos/evm/v1beta1/account/export/{address}";
-	//    }
 	// Params queries the parameters of x/evm module.
 	Params(context.Context, *QueryParamsRequest) (*QueryParamsResponse, error)
+	// Section queries the parameters of x/evm module.
+	Section(context.Context, *QuerySectionRequest) (*QuerySectionResponse, error)
 }
 
 // UnimplementedQueryServer can be embedded to have forward compatible implementations.
@@ -1046,9 +1072,6 @@ func (*UnimplementedQueryServer) Storage(ctx context.Context, req *QueryStorageR
 func (*UnimplementedQueryServer) Code(ctx context.Context, req *QueryCodeRequest) (*QueryCodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Code not implemented")
 }
-func (*UnimplementedQueryServer) HashToHeight(ctx context.Context, req *QueryHeightRequest) (*QueryHeightResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method HashToHeight not implemented")
-}
 func (*UnimplementedQueryServer) HeightToHash(ctx context.Context, req *QueryHashRequest) (*QueryHashResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method HeightToHash not implemented")
 }
@@ -1060,6 +1083,9 @@ func (*UnimplementedQueryServer) Account(ctx context.Context, req *QueryAccountR
 }
 func (*UnimplementedQueryServer) Params(ctx context.Context, req *QueryParamsRequest) (*QueryParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Params not implemented")
+}
+func (*UnimplementedQueryServer) Section(ctx context.Context, req *QuerySectionRequest) (*QuerySectionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Section not implemented")
 }
 
 func RegisterQueryServer(s grpc1.Server, srv QueryServer) {
@@ -1116,24 +1142,6 @@ func _Query_Code_Handler(srv interface{}, ctx context.Context, dec func(interfac
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(QueryServer).Code(ctx, req.(*QueryCodeRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Query_HashToHeight_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(QueryHeightRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(QueryServer).HashToHeight(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/gaia.evm.v1beta1.Query/HashToHeight",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(QueryServer).HashToHeight(ctx, req.(*QueryHeightRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1210,6 +1218,24 @@ func _Query_Params_Handler(srv interface{}, ctx context.Context, dec func(interf
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Query_Section_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(QuerySectionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(QueryServer).Section(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/gaia.evm.v1beta1.Query/Section",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(QueryServer).Section(ctx, req.(*QuerySectionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _Query_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "gaia.evm.v1beta1.Query",
 	HandlerType: (*QueryServer)(nil),
@@ -1227,10 +1253,6 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 			Handler:    _Query_Code_Handler,
 		},
 		{
-			MethodName: "HashToHeight",
-			Handler:    _Query_HashToHeight_Handler,
-		},
-		{
 			MethodName: "HeightToHash",
 			Handler:    _Query_HeightToHash_Handler,
 		},
@@ -1245,6 +1267,10 @@ var _Query_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Params",
 			Handler:    _Query_Params_Handler,
+		},
+		{
+			MethodName: "Section",
+			Handler:    _Query_Section_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
@@ -1438,7 +1464,7 @@ func (m *QueryCodeResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	return len(dAtA) - i, nil
 }
 
-func (m *QueryBlockNumberRequest) Marshal() (dAtA []byte, err error) {
+func (m *QuerySectionRequest) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -1448,16 +1474,44 @@ func (m *QueryBlockNumberRequest) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *QueryBlockNumberRequest) MarshalTo(dAtA []byte) (int, error) {
+func (m *QuerySectionRequest) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *QueryBlockNumberRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *QuerySectionRequest) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
 	_ = l
+	return len(dAtA) - i, nil
+}
+
+func (m *QuerySectionResponse) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *QuerySectionResponse) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *QuerySectionResponse) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Section != 0 {
+		i = encodeVarintQuery(dAtA, i, uint64(m.Section))
+		i--
+		dAtA[i] = 0x8
+	}
 	return len(dAtA) - i, nil
 }
 
@@ -1856,12 +1910,24 @@ func (m *QueryCodeResponse) Size() (n int) {
 	return n
 }
 
-func (m *QueryBlockNumberRequest) Size() (n int) {
+func (m *QuerySectionRequest) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
+	return n
+}
+
+func (m *QuerySectionResponse) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Section != 0 {
+		n += 1 + sovQuery(uint64(m.Section))
+	}
 	return n
 }
 
@@ -2527,7 +2593,7 @@ func (m *QueryCodeResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *QueryBlockNumberRequest) Unmarshal(dAtA []byte) error {
+func (m *QuerySectionRequest) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -2550,12 +2616,81 @@ func (m *QueryBlockNumberRequest) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: QueryBlockNumberRequest: wiretype end group for non-group")
+			return fmt.Errorf("proto: QuerySectionRequest: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: QueryBlockNumberRequest: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: QuerySectionRequest: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
+		default:
+			iNdEx = preIndex
+			skippy, err := skipQuery(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthQuery
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *QuerySectionResponse) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowQuery
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: QuerySectionResponse: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: QuerySectionResponse: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Section", wireType)
+			}
+			m.Section = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowQuery
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Section |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipQuery(dAtA[iNdEx:])

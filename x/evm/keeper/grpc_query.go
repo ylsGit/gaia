@@ -70,11 +70,6 @@ func (k Keeper) Code(c context.Context, req *types.QueryCodeRequest) (*types.Que
 }
 
 //
-func (k Keeper) BlockNumber(context.Context, *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
-	return nil, nil
-}
-
-//
 func (k Keeper) HashToHeight(c context.Context, req *types.QueryHeightRequest) (*types.QueryHeightResponse, error) {
 	if req == nil {
 		return nil, status.Errorf(codes.InvalidArgument, "empty request")
@@ -91,7 +86,6 @@ func (k Keeper) HashToHeight(c context.Context, req *types.QueryHeightRequest) (
 	}
 
 	return &types.QueryHeightResponse{Height: blockNumber}, nil
-
 }
 
 //
@@ -145,11 +139,6 @@ func (k Keeper) Account(c context.Context, req *types.QueryAccountRequest) (*typ
 	}, nil
 }
 
-//
-func (k Keeper) ExportAccount(context.Context, *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
-	return nil, nil
-}
-
 // Params queries the parameters of x/evm module.
 func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
 	ctx := sdk.UnwrapSDKContext(c)
@@ -159,16 +148,12 @@ func (k Keeper) Params(c context.Context, _ *types.QueryParamsRequest) (*types.Q
 }
 
 // Section queries the parameters of x/evm module.
-func (k Keeper) Section(context.Context, *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
-	return nil, nil
-}
+func (k Keeper) Section(context.Context, *types.QuerySectionRequest) (*types.QuerySectionResponse, error) {
+	if !types.GetEnableBloomFilter() {
+		return nil, status.Error(codes.PermissionDenied, "disable bloom filter")
+	}
 
-// ContractDeploymentWhitelist queries the parameters of x/evm module.
-func (k Keeper) ContractDeploymentWhitelist(context.Context, *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
-	return nil, nil
-}
-
-// ContractBlockedList queries the parameters of x/evm module.
-func (k Keeper) ContractBlockedList(context.Context, *types.QueryParamsRequest) (*types.QueryParamsResponse, error) {
-	return nil, nil
+	return &types.QuerySectionResponse{
+		Section: types.GetIndexer().StoredSection(),
+	}, nil
 }

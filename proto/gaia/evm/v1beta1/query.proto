@@ -23,15 +23,6 @@ service Query {
   rpc Code(QueryCodeRequest) returns (QueryCodeResponse) {
     option (google.api.http).get = "/cosmos/evm/v1beta1/code/{address}";
   }
-  //
-  //    rpc BlockNumber(QueryBlockNumberRequest) returns (QueryParamsResponse) {
-  //        option (google.api.http).get =
-  //        "/cosmos/evm/v1beta1/blocks/number/latest";
-  //    }
-  // HashToHeight queries the block height by a block hash.
-  rpc HashToHeight(QueryHeightRequest) returns (QueryHeightResponse) {
-    option (google.api.http).get = "/cosmos/evm/v1beta1/blocks/number/{hash}";
-  }
   // HeightToHash queries the block hash by a block height.
   rpc HeightToHash(QueryHashRequest) returns (QueryHashResponse) {
     option (google.api.http).get = "/cosmos/evm/v1beta1/blocks/hash/{height}";
@@ -44,31 +35,14 @@ service Query {
   rpc Account(QueryAccountRequest) returns (QueryAccountResponse) {
     option (google.api.http).get = "/cosmos/evm/v1beta1/account/{address}";
   }
-  //    //
-  //    rpc ExportAccount(QueryParamsRequest) returns (QueryParamsResponse) {
-  //        option (google.api.http).get =
-  //        "/cosmos/evm/v1beta1/account/export/{address}";
-  //    }
   // Params queries the parameters of x/evm module.
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/cosmos/evm/v1beta1/params";
   }
   // Section queries the parameters of x/evm module.
-  //    rpc Section(QueryParamsRequest) returns (QueryParamsResponse) {
-  //        option (google.api.http).get = "/cosmos/evm/v1beta1/section";
-  //    }
-  //    // ContractDeploymentWhitelist queries the parameters of x/evm module.
-  //    rpc ContractDeploymentWhitelist(QueryParamsRequest) returns
-  //    (QueryParamsResponse) {
-  //        option (google.api.http).get =
-  //        "/cosmos/evm/v1beta1/contract/whitelist";
-  //    }
-  //    // ContractBlockedList queries the parameters of x/evm module.
-  //    rpc ContractBlockedList(QueryParamsRequest) returns
-  //    (QueryParamsResponse) {
-  //        option (google.api.http).get =
-  //        "/cosmos/evm/v1beta1/contract/blacklist";
-  //    }
+  rpc Section(QuerySectionRequest) returns (QuerySectionResponse) {
+    option (google.api.http).get = "/cosmos/evm/v1beta1/section";
+  }
 }
 
 // QueryBalanceRequest
@@ -109,8 +83,11 @@ message QueryCodeResponse {
   bytes code = 1;
 }
 
-// QueryBlockNumberRequest
-message QueryBlockNumberRequest {}
+// QuerySectionRequest
+message QuerySectionRequest {}
+
+// QuerySectionResponse
+message QuerySectionResponse { uint64 section = 1; }
 
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
