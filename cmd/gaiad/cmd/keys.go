@@ -48,12 +48,12 @@ The pass backend requires GnuPG: https://gnupg.org/
 	addCmd := keys.AddKeyCommand()
 
 	// update the default signing algorithm value to "eth_secp256k1"
-	//algoFlag := addCmd.Flag("algo")
-	//algoFlag.DefValue = string(hd.EthSecp256k1Type)
-	//err := algoFlag.Value.Set(string(hd.EthSecp256k1Type))
-	//if err != nil {
-	//	panic(err)
-	//}
+	algoFlag := addCmd.Flag("algo")
+	algoFlag.DefValue = string(hd.EthSecp256k1Type)
+	err := algoFlag.Value.Set(string(hd.EthSecp256k1Type))
+	if err != nil {
+		panic(err)
+	}
 
 	addCmd.RunE = runAddCmd
 

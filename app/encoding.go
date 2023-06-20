@@ -6,12 +6,12 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec/legacy"
 	codectypes "github.com/cosmos/cosmos-sdk/codec/types"
 	"github.com/cosmos/cosmos-sdk/crypto/keyring"
-	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	"github.com/cosmos/cosmos-sdk/std"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
-	"github.com/cosmos/gaia/v4/x/evm/types"
 	"github.com/cosmos/gaia/v4/app/params"
+	"github.com/cosmos/gaia/v4/crypto/ethsecp256k1"
+	"github.com/cosmos/gaia/v4/x/evm/types"
 )
 
 // MakeEncodingConfig creates an EncodingConfig for testing
@@ -35,6 +35,7 @@ func registerEthCrypto(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&ethsecp256k1.PrivKey{},
 		ethsecp256k1.PrivKeyName, nil)
 
+	cdc.RegisterConcrete(&types.EthAccount{}, "EthAccountName", nil)
 	keyring.RegisterLegacyAminoCodec(cdc)
 	// NOTE: update SDK's amino codec to include the ethsecp256k1 keys.
 	// DO NOT REMOVE unless deprecated on the SDK.

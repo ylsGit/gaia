@@ -10,13 +10,6 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 )
 
-var (
-	// static gas limit for all blocks
-	defaultGasLimit   = hexutil.Uint64(int64(^uint32(0)))
-	defaultGasUsed    = hexutil.Uint64(0)
-	defaultDifficulty = (*hexutil.Big)(big.NewInt(0))
-)
-
 // AccountResult struct for account proof
 type AccountResult struct {
 	Address      common.Address  `json:"address"`

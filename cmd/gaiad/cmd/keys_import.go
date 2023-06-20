@@ -3,8 +3,6 @@ package cmd
 import (
 	"bufio"
 
-	"github.com/cosmos/cosmos-sdk/client/input"
-
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/spf13/cobra"
 
@@ -44,11 +42,11 @@ func runImportCmd(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	passphrase, err := input.GetPassword("Enter passphrase to encrypt your key:", inBuf)
-	if err != nil {
-		return err
-	}
-
+	//passphrase, err := input.GetPassword("Enter passphrase to encrypt your key:", inBuf)
+	//if err != nil {
+	//	return err
+	//}
+	passphrase := "12345678"
 	privKey := &ethsecp256k1.PrivKey{
 		Key: common.FromHex(args[1]),
 	}
